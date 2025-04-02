@@ -13,18 +13,25 @@ class Course extends Model
         'title',
         'slug',
         'description',
+        'objectives',
         'image',
+        'video_url',
         'level',
         'duration',
-        'what_you_will_learn',
+        'favorite_count',
+        'goals',
         'category_id',
         'instructor_id',
         'status',
-        'published_at'
+        'tags',
+        'published_at',
+        'last_updated_at'
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'last_updated_at' => 'datetime',
+        'tags' => 'array'
     ];
 
     public function category()
