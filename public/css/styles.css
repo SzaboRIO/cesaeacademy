@@ -1,0 +1,548 @@
+html {
+    font-size: 16px; /* tamanho base */
+}
+
+/* Estilo do body */
+body {
+    background-color: #e2c8e4 !important;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Estilo do logo */
+.logo {
+    max-height: 85px !important;
+    max-width: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+ /* Ajusta a altura máxima do logo em telas pequenas */
+ /* @media no CSS permite aplicar estilos somente em determinadas condições, como a largura da tela do dispositivo. É uma maneira de fazer seu site responsivo */
+@media (max-width: 576px) {
+    .logo {
+        max-height: 72px !important;
+    }
+}
+
+.logo:hover {
+    transform: scale(1.03);
+}
+
+/* Navbar background */
+.navbar {
+    background-color: #e2c8e4 !important;
+
+}
+
+/* Menu hambuerger */
+.navbar-toggler {
+    border: 1px solid #36236a !important; /* Cor da borda */
+    background-color: #e2c8e4 !important; /* Cor de fundo roxa */
+    border-radius: 20px; /* Arredondar os cantos */
+}
+
+/* Estilizando o ícone do hambúrguer (as 3 linhas) */
+.navbar-toggler-icon {
+    background-color: #e2c8e4; /* Cor das linhas */
+    width: 20px !important; /* Largura das linhas */
+}
+
+/* Navbar links */
+.navbar-nav .nav-link {
+    color: black !important;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400; /* Medium-bold */
+}
+
+/* Navbar links on hover */
+.navbar-nav .nav-link:hover {
+    color: #36236a !important;
+    transition: color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    background-color: #343a40;
+    border-radius: 3px !important;
+    border: none !important;
+    padding: 24px 2px !important;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0s 0.2s;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.2s ease, visibility 0s 0s;
+}
+
+/* Dropdown links */
+.dropdown-menu .dropdown-item {
+    color: #36236a !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1rem;
+    font-weight: 400; /* Medium-bold */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Dropdown links on hover */
+.dropdown-menu .dropdown-item:hover {
+    background-color: #36236a !important;
+    color: white !important;
+    transform: translateX(-16px);
+}
+
+/* Search bar */
+.form-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%; /* Garante que o form ocupe toda a largura disponível */
+    max-width: 540px;
+}
+
+/* Search bar */
+.search-type {
+    border: 1px solid #e2c8e4 !important;
+    background-color: #f8f9fa !important;
+    color: #000;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 20px !important;
+    flex-grow: 1; /* Faz o input crescer para ocupar o espaço disponível porque tanto .search-type quanto .btn-search usam width: 100% dentro do mesmo .form-inline e mudar a largura de um afeta o outro*/
+    flex-shrink: 1; /* Permite que o input encolha se necessário */
+    flex-basis: 0; /* Garante que o input respeite max-width de 450 px */
+}
+
+/* Search bar button */
+.btn-search {
+    color: #36236a !important;
+    border-color: #36236a !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px !important;
+    width: auto; /* Mantém o tamanho baseado no conteúdo */
+    max-width: 140px !important;
+    flex-grow: 1; /* Impede que o botão cresça (no espaço que divide com a search bar) */
+    flex-shrink: 0; /* Impede que o botão encolha (no espaço que divide com a search bar) */
+    font-weight: 600 !important;
+}
+
+/* Search bar button */
+.btn-outline-success:hover {
+    background-color: #36236a !important;
+    color: #e2c8e4  !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Botão de Registo */
+.btn-register {
+    color: #e2c8e4 !important;
+    background-color: #36236a !important;
+    border-color: #36236a !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px !important;
+    width: 130px; /* Mantém o tamanho baseado no conteúdo */
+    max-width: 130px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Botão de Registo on hover */
+.btn-register:hover {
+    background-color: #e2c8e4 !important;
+    color: #36236a  !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* topo do offcanvas de Login */
+#offcanvasLogin {
+    background-color: #36236a !important;
+    color: #e2c8e4;
+}
+
+/* topo do offcanvas de Registo */
+#offcanvasRegister {
+    background-color: #36236a !important;
+    color: #e2c8e4;
+}
+
+/* topo do offcanvas de Recuperação de Password */
+#offcanvasRecover {
+    background-color: #36236a !important;
+    color: #e2c8e4;
+}
+
+/* offcanvas botão de login/registo */
+.btn-offcanvas {
+    color: #36236a !important;
+    background-color: #e2c8e4 !important;
+    border-color: #e2c8e4 !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px !important;
+    width: 130px; /* Mantém o tamanho baseado no conteúdo */
+    max-width: 130px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* botão de Registo on hover */
+.btn-offcanvas:hover {
+    background-color: #36236a!important;
+    color: #e2c8e4  !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* offcanvas Login/registo */
+/* Estilo do offcanvas */
+.offcanvas {
+    width: 400px;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* offcanvas body */
+.offcanvas-body {
+    background-color:  #36236a;
+    color: #e2c8e4 !important;
+}
+
+/* offcanvas Login/registo */
+/* cor do texto digitado dentro dos formulários*/
+.offcanvas-body input {
+    color: #e2c8e4  !important;
+}
+
+/* offcanvas Login/registo */
+/* cor dos placeholders do formulário no offcanvas */
+.offcanvas-body input::placeholder {
+    color: #e2c8e4 !important;
+}
+
+/* offcanvas Login/registo */
+/* Titulo do offcanvas */
+.offcanvas-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* offcanvas Login/registo */
+/* Estilo do formulario dentro do offcanvas */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* offcanvas Login/registo */
+/* estilo dos inputs */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+/* offcanvas Login/registo */
+.btn.btn-offcanvas-link {
+    color: #e2c8e4 !important;
+    text-decoration: underline; /* Manter o texto sublinhado */
+    transition: transform 0.2s ease, text-decoration 0.2s ease;
+}
+
+/* offcanvas Login/registo */
+.btn.btn-offcanvas-link:hover {
+    color: #e2c8e4 !important;  /* Não alterar a cor ao passar o mouse */
+    text-decoration: none;   /* Remover o sublinhado ao passar o mouse */
+    transform: scale(1.04);
+}
+
+/* offcanvas Login/registo */
+/* aviso no final do offcanvas de Login/registo */
+.warning {
+    font-size: 0.8em;
+}
+
+/* offcanvas Login/registo */
+/* aviso no final do offcanvas de Login/registo */
+.warning-link {
+    color: #e2c8e4 !important;
+    text-decoration: underline; /* Manter o texto sublinhado */
+}
+
+/* offcanvas Login/registo */
+/* aviso no final do offcanvas de Login/registo */
+.warning-link:hover {
+    color: #e2c8e4 !important;  /* Não alterar a cor ao passar o mouse */
+    text-decoration: none;   /* Remover o sublinhado ao passar o mouse */
+}
+
+/* Setas do carousel */
+.carousel-control-prev-icon {
+    position: absolute;
+    justify-content: left;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 5%;
+    left: 2%; /* Mantém a seta próxima à margem esquerda (2% da largura da tela) */
+    width: 2vw; /* Largura da seta ajustada proporcionalmente à largura da tela --> opção mais responsiva, se comparado com width e height */
+    height: 2vw; /* Altura da seta ajustada proporcionalmente à largura da tela --> opção mais responsiva, se comparado com width e height */
+    /* obs: vw = viewport width. */
+    /* obs: 1vw = 1% da largura total da sua viewport */
+}
+
+.carousel-control-next-icon {
+    position: absolute;
+    justify-content: right;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 5%;
+    right: 2%; /* Mantém a seta próxima à margem direita (2% da largura da tela) */
+    width: 6vw; /* Largura da seta ajustada proporcionalmente à largura da tela --> opção mais responsiva, se comparado com width e height */
+    height: 6vw; /* Altura da seta ajustada proporcionalmente à largura da tela --> opção mais responsiva, se comparado com width e height */
+}
+
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+    background-color: #36236a;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+
+/* Card Container */
+.card {
+    transition: transform 0.3s ease-in-out;
+    border-radius: 5px !important;
+}
+
+/* Card Hover */
+.card:hover {
+transform: translateY(-12px);
+}
+
+
+/* Card Image */
+.card-img-top {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Card Body */
+.card-body {
+background-color: #36236a ;
+}
+
+.card-title {
+font-size: 1.25rem;
+font-weight: bold;
+color: #e9d2eb !important;
+}
+
+.card-text {
+color: #e9d2eb !important;
+font-size: 0.95rem;
+margin-bottom: 15px;
+}
+
+/* Footer */
+.card-footer {
+    background-color: #f8f9fa;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px !important;
+}
+
+/* Links dentro dos cards */
+.card a {
+    color: white;
+    text-decoration: none; /* Remover sublinhado */
+    transition: color 0.3s ease;
+}
+
+/* Links dentro dos cards ao passar o mouse */
+.card a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Estilo padrão para as imagens circulares */
+.testemunho-img {
+    width: 10rem; /* ~150px */
+    height: 10rem; /* ~150px */
+    transition: transform 0.3s ease; /* Transição suave */
+}
+
+/* Efeito de hover para aumentar o tamanho das imagens circulares */
+.testemunho-img:hover {
+    transform: scale(1.07); /* Aumenta o tamanho em 10% */
+}
+
+/* Content box da subscrição na newsletter */
+.content-box {
+    background-color: #36236a;
+    color: #e2c8e4;
+    text-align: center;
+}
+
+/* Texto na área de subscrição */
+.form-text {
+    color: #e2c8e4 !important;
+}
+
+/* Botão de subscrição */
+.btn-send {
+    background-color: #e2c8e4 !important;
+    border-color: #36236a !important;
+    color: #36236a !important;
+    border-radius: 20px !important;
+    padding-left: 70px !important;
+    padding-right: 70px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+/* Efeito no hover botão de subscrição */
+.btn-primary:hover {
+    background-color: #36236a !important; /* Cor de fundo levemente alterada */
+    border-color: #e2c8e4 !important;
+    color: #e2c8e4 !important; /* Cor do texto em branco */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra muito suave */
+    transform: scale(1.02); /* Apenas um aumento muito sutil no tamanho */
+}
+
+/* Efeito de foco */
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Efeito de "salto para cima" no clique */
+.btn-primary:active {
+    transform: translateY(-5px); /* O botão "sobe" suavemente 5px ao ser clicado */
+    transition: transform 0.4s ease-out; /* Faz a transição do salto ser suave */
+}
+
+/* Aparência do formulário de subscrição */
+.form-control { /* forms from sign in and sign up page */
+    border: 1px solid #e2c8e4 !important;
+    border-radius: 3px !important;
+    background-color: #36236a !important;
+}
+
+.bs-default {
+    /* sobrescreve o que seu CSS customizado fez no .form-control */
+    background-color: #fff !important;
+    border: 1px solid #ced4da !important;
+    color: #212529 !important;
+    /* Adicione quaisquer propriedades do “padrão do Bootstrap” */
+}
+
+
+/* Cor do texto digitado do formulário de subscrição */
+form input {
+    color: #e2c8e4 !important;
+}
+
+
+/* Efeito on hover para aumentar o tamanho das imagem principal na área de Subscrição */
+.img_subscription:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease-out;
+}
+
+/* Footer */
+.footer {
+    background-color: white !important;
+    color: #000;
+    font-size: 0.875rem;
+}
+
+.footer-text {
+    text-align: left !important; /* Alinhamento texto à esquerda */
+}
+
+.footer-link {
+    color: #000;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
+.social-icon {
+    width: 32px; /* Tamanho dos ícones */
+    height: 32px; /* Tamanho dos ícones */
+    margin-left: 3px; /* Espaçamento entre os ícones */
+    transition: transform 0.4s ease; /* Transição suave */
+}
+
+.social-icon:hover {
+    transform: scale(1.1); /* Aumenta o tamanho dos ícones ao passar o mouse */
+}
+
+#selecao {
+    border: 1px solid #e2c8e4 !important;
+    border-radius: 3px !important;
+    background-color: #e2c8e4  !important;
+    color:  #36236a !important;
+    padding: 10px;
+}
+
+#selecao:focus {
+    border-color: #b08fc9 !important;
+    box-shadow: 0 0 5px rgba(226, 200, 228, 0.5) !important;
+}
+
+#propostaFormacao {
+    color: #e2c8e4 !important;
+    background-color: #36236a !important;
+    border: 1px solid #e2c8e4 !important;
+    border-radius: 3px !important;
+}
+
+#propostaFormacao input {
+    color: #e2c8e4  !important;
+}
+
+/* Barra roxa (hero banner) */
+.barra-roxa {
+    background-color: #36236a; /* Tom roxo que você já usa no projeto */
+    color: #e2c8e4;            /* Tom claro que contrasta bem com o fundo roxo */
+    text-align: center;        /* Centraliza todo o conteúdo (título, texto, botões, etc.) */
+    padding: 4rem 1rem;        /* Espaçamento vertical e horizontal */
+}
+
+/* Título principal da barra */
+.barra-roxa h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* Parágrafo/subtítulo dentro da barra */
+.barra-roxa p {
+    font-size: 1.125rem; /* ~18px */
+    max-width: 800px;    /* Para não ficar texto muito largo em telas grandes */
+    margin: 0 auto;      /* Centraliza horizontalmente */
+}
+
+.table-light thead a {
+    color: #000 !important; /* ou a cor que preferir */
+    text-decoration: none;  /* se quiser remover sublinhado */
+}
+
+.form-select-purple {
+    background-color: #36236a !important; /* Fundo roxo */
+    color: #e2c8e4 !important;           /* Texto claro */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 2'%3E%3Cpath fill='%23e2c8e4' d='M2 2 L0 0 H4 L2 2 Z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 10px 6px !important;
+}
