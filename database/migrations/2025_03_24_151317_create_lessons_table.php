@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->foreignId('module_id')->constrained()->onDelete('cascade'); // Nova referência
             $table->string('video_url')->nullable();
             $table->integer('order');

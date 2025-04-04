@@ -40,10 +40,15 @@ class CourseController extends Controller
             });
         }
 
-        $courses = $query->paginate(12);
+        $courses = $query->paginate(10);
         $categories = Category::all();
 
         return view('cursos', compact('courses', 'categories'));
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function show($slug)
@@ -66,129 +71,130 @@ class CourseController extends Controller
 
     public function createModule($courseId)
     {
-    $course = Course::findOrFail($courseId);
+        $course = Course::findOrFail($courseId);
 
-    // Verificar se o usuário tem permissão (é o formador do curso ou é admin)
-    if (Auth::id() != $course->instructor_id && !Auth::user()->isAdmin()) {
-        return redirect()->back()->with('error', 'Você não tem permissão para adicionar módulos a este curso.');
-    }
+        // Verificar se o usuário tem permissão (é o formador do curso ou é admin)
+        if (Auth::id() != $course->user_id && !Auth::user()->isAdmin()) {
+            return redirect()->back()->with('error', 'Você não tem permissão para adicionar módulos a este curso.');
+        }
 
-    return view('courses.modules.create', compact('course'));
+        return view('courses.modules.create', compact('course'));
     }
 
     public function storeModule(Request $request, $courseId)
     {
-    $course = Course::findOrFail($courseId);
+        $course = Course::findOrFail($courseId);
 
-    // Verificar permissão
-    if (Auth::id() != $course->instructor_id && !Auth::user()->isAdmin()) {
-        return redirect()->back()->with('error', 'Você não tem permissão para adicionar módulos a este curso.');
-    }
+        // Verificar permissão
+        if (Auth::id() != $course->user_id && !Auth::user()->isAdmin()) {
+            return redirect()->back()->with('error', 'Você não tem permissão para adicionar módulos a este curso.');
+        }
 
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'order' => 'required|integer|min:1',
-    ]);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'order' => 'required|integer|min:1',
+        ]);
 
-    $module = new Module();
-    $module->title = $validated['title'];
-    $module->order = $validated['order'];
-    $module->course_id = $course->id;
-    $module->save();
+        $module = new Module();
+        $module->title = $validated['title'];
+        $module->order = $validated['order'];
+        $module->course_id = $course->id;
+        $module->save();
 
-    return redirect()->route('courses.edit', $course->id)
-        ->with('success', 'Módulo adicionado com sucesso!');
+        return redirect()->route('courses.edit', $course->id)
+            ->with('success', 'Módulo adicionado com sucesso!');
     }
 
     public function create()
     {
-    $categories = Category::all();
-    return view('courses.create', compact('categories'));
+        $categories = Category::all();
+        return view('courses.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-    // Validar dados do curso
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'objectives' => 'nullable|string',
-        'level' => 'required|in:Iniciante,Intermediário,Avançado',
-        'duration' => 'required|integer|min:1',
-        'category_id' => 'required|exists:categories,id',
-        'tags' => 'nullable|string',
-        'image' => 'nullable|image|max:2048',
-        'video_url' => 'nullable|string|max:255',
-    ]);
 
-    // Processar tags
-    if (!empty($validated['tags'])) {
-        $tagArray = array_map('trim', explode(',', $validated['tags']));
-        $validated['tags'] = json_encode($tagArray);
-    } else {
-        $validated['tags'] = json_encode([]);
-    }
+        dd(Auth::id());
+        // Validar dados do curso
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'objectives' => 'required|string',
+            'level' => 'required|in:Iniciante,Intermédio,Avançado',
+            'duration' => 'required|integer|min:1',
+            'category_id' => 'required|exists:categories,id',
+            'tags' => 'nullable|string',
+            'image' => 'required|image|max:2048',
+            'video_url' => 'required|string|max:255',
+        ]);
 
-    // Processar imagem
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('courses', 'public');
-        $validated['image'] = $imagePath;
-    }
+        // Processar tags
+        if (!empty($validated['tags'])) {
+            $tagArray = array_map('trim', explode(',', $validated['tags']));
+            $validated['tags'] = json_encode($tagArray);
+        } else {
+            $validated['tags'] = json_encode([]);
+        }
 
-    // Criar slug
-    $validated['slug'] = Str::slug($validated['title']);
+        // Processar imagem
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('courses', 'public');
+            $validated['image'] = $imagePath;
+        }
 
-    // Definir instructor_id como o usuário atual
-    $validated['instructor_id'] = Auth::id();
+        // Criar slug
+        $validated['slug'] = Str::slug($validated['title']);
 
-    // Definir status como pendente
-    $validated['status'] = 'pendente';
+        // Definir user_id como o usuário atual
+        $validated['user_id'] = Auth::id();
 
-    // Iniciar transação para garantir consistência
-    DB::beginTransaction();
+        // Definir status como pendente
+        $validated['status'] = 'pendente';
 
-    try {
-        // Criar o curso
-        $course = Course::create($validated);
+        // Iniciar transação para garantir consistência
+        DB::beginTransaction();
 
-        // Processar módulos e aulas
-        if ($request->has('modules')) {
-            foreach ($request->modules as $moduleData) {
-                // Criar módulo
-                $module = new Module([
-                    'title' => $moduleData['title'],
-                    'order' => $moduleData['order'],
-                    'course_id' => $course->id
-                ]);
-                $module->save();
+        try {
+            // Criar o curso
+            $course = Course::create($validated);
 
-                // Processar aulas deste módulo
-                if (isset($moduleData['lessons'])) {
-                    foreach ($moduleData['lessons'] as $lessonData) {
-                        // Criar aula
-                        $lesson = new Lesson([
-                            'title' => $lessonData['title'],
-                            'video_url' => $lessonData['video_url'],
-                            'order' => $lessonData['order'],
-                            'course_id' => $course->id,
-                            'module_id' => $module->id
-                        ]);
-                        $lesson->save();
+            // Processar módulos e aulas
+            if ($request->has('modules')) {
+                foreach ($request->modules as $moduleData) {
+                    // Criar módulo
+                    $module = new Module([
+                        'title' => $moduleData['title'],
+                        'order' => $moduleData['order'],
+                        'course_id' => $course->id
+                    ]);
+                    $module->save();
+
+                    // Processar aulas deste módulo
+                    if (isset($moduleData['lessons'])) {
+                        foreach ($moduleData['lessons'] as $lessonData) {
+                            // Criar aula
+                            $lesson = new Lesson([
+                                'title' => $lessonData['title'],
+                                'video_url' => $lessonData['video_url'],
+                                'order' => $lessonData['order'],
+                                'module_id' => $module->id
+                            ]);
+                            $lesson->save();
+                        }
                     }
                 }
             }
-        }
 
-        DB::commit();
+            DB::commit();
 
-        return redirect()->route('courses.index')
-            ->with('success', 'Curso criado com sucesso! Aguardando aprovação do administrador.');
+            return redirect()->route('courses.index')
+                ->with('success', 'Curso criado com sucesso! Aguardando aprovação do administrador.');
 
-    } catch (\Exception $e) {
-        DB::rollback();
+        } catch (\Exception $e) {
+            DB::rollback();
 
-        return back()->withInput()
-            ->with('error', 'Ocorreu um erro ao criar o curso: ' . $e->getMessage());
+            return back()->withInput()
+                ->with('error', 'Ocorreu um erro ao criar o curso: ' . $e->getMessage());
         }
     }
 }

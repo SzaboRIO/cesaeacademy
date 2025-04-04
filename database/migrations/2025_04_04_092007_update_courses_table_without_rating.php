@@ -17,7 +17,7 @@ return new class extends Migration
                 $table->text('objectives')->nullable();
                 $table->string('image')->nullable();
                 $table->string('video_url')->nullable();
-                $table->enum('level', ['Iniciante', 'Intermediário', 'Avançado']);
+                $table->enum('level', ['Iniciante', 'Intermédio', 'Avançado']);
                 $table->integer('duration')->comment('em horas');
                 $table->integer('favorite_count')->default(0);
                 $table->integer('inscricoes_count')->default(0);
@@ -50,7 +50,7 @@ return new class extends Migration
                     $table->string('video_url')->nullable();
                 }
                 if (!Schema::hasColumn('courses', 'level')) {
-                    $table->enum('level', ['Iniciante', 'Intermediário', 'Avançado']);
+                    $table->enum('level', ['Iniciante', 'Intermédio', 'Avançado']);
                 }
                 if (!Schema::hasColumn('courses', 'duration')) {
                     $table->integer('duration')->comment('em horas');

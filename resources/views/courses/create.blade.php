@@ -61,23 +61,24 @@
                                     id="objectives"
                                     name="objectives"
                                     rows="3"
+                                    required
                                 >{{ old('objectives') }}</textarea>
                             </div>
 
                             <!-- Nível -->
                             <div class="mb-3">
                                 <label for="level" class="form-label">Nível</label>
-                                <select class="form-select" id="level" name="level" required>
+                                <select class="form-select form-select-purple" id="level" name="level" required>
                                     <option value="">Selecione o nível</option>
                                     <option value="Iniciante" {{ old('level') == 'Iniciante' ? 'selected' : '' }}>Iniciante</option>
-                                    <option value="Intermediário" {{ old('level') == 'Intermediário' ? 'selected' : '' }}>Intermediário</option>
+                                    <option value="Intermédio" {{ old('level') == 'Intermédio' ? 'selected' : '' }}>Intermédio</option>
                                     <option value="Avançado" {{ old('level') == 'Avançado' ? 'selected' : '' }}>Avançado</option>
                                 </select>
                             </div>
 
-                            <!-- Duração em minutos -->
+                            <!-- Duração em horas -->
                             <div class="mb-3">
-                                <label for="duration" class="form-label">Duração (em minutos)</label>
+                                <label for="duration" class="form-label">Duração (em horas)</label>
                                 <input
                                     type="number"
                                     class="form-control"
@@ -87,17 +88,16 @@
                                     min="1"
                                     required
                                 >
-                                <div class="form-text">Ex: 120 minutos = 2 horas</div>
                             </div>
 
                             <!-- Categoria -->
                             <div class="mb-3">
                                 <label for="category_id" class="form-label">Categoria</label>
-                                <select class="form-select" id="category_id" name="category_id" required>
+                                <select class="form-select form-select-purple" id="category_id" name="category_id" required>
                                     <option value="">Selecione a categoria</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }} ({{ $category->area }})
+                                            {{ $category->area }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -125,6 +125,7 @@
                                     id="image"
                                     name="image"
                                     accept="image/*"
+                                    required
                                 >
                             </div>
 
@@ -138,6 +139,7 @@
                                     name="video_url"
                                     value="{{ old('video_url') }}"
                                     placeholder="Ex: https://www.youtube.com/watch?v=abcdefghijk"
+                                    required
                                 >
                             </div>
 

@@ -19,10 +19,10 @@ class Course extends Model
         'level',
         'duration',
         'favorite_count',
-        'goals',
-        'category_id',
-        'instructor_id',
+        'inscricoes_count',
         'status',
+        'user_id',
+        'category_id',
         'tags',
         'published_at',
         'last_updated_at'

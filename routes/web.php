@@ -44,10 +44,9 @@ Route::middleware(['auth', 'role:aluno'])->prefix('dashboard/aluno')->group(func
 });
 
 // Rotas para formadores
-Route::middleware(['auth', 'role:formador'])->prefix('dashboard/formador')->group(function () {
+Route::middleware(['auth', CheckRole::class.':formador'])->group(function () {
     Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
-    Route::get('/', [DashboardController::class, 'formador'])->name('dashboard.formador');
     Route::get('/meus-cursos', [FormadorController::class, 'courses'])->name('formador.courses');
     Route::get('/criar-curso', [FormadorController::class, 'create'])->name('formador.course.create');
     Route::post('/criar-curso', [FormadorController::class, 'store'])->name('formador.course.store');

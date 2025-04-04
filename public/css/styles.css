@@ -448,6 +448,18 @@ form input {
     color: #e2c8e4 !important;
 }
 
+/* Cor do texto digitado do formulário textarea */
+form textarea {
+    color: #e2c8e4 !important;
+}
+
+#tags::placeholder {
+    color: #e2c8e4 !important;
+}
+
+#video_url::placeholder {
+    color: #e2c8e4 !important;
+}
 
 /* Efeito on hover para aumentar o tamanho das imagem principal na área de Subscrição */
 .img_subscription:hover {

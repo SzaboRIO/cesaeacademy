@@ -113,7 +113,7 @@
                                 @endif
                                 @if (Auth::user()->isFormador())
                                 <li><a class="dropdown-item" href="delopment.html">&nbsp;&nbsp;&nbsp;Meus cursos&nbsp;&nbsp;&nbsp;</a></li>
-                                <li><a class="dropdown-item" href="itnetwork.html">&nbsp;&nbsp;&nbsp;Criar Cursos&nbsp;&nbsp;&nbsp;</a></li>
+                                <li><a class="dropdown-item" href="{{ route('courses.create') }}">&nbsp;&nbsp;&nbsp;Criar Cursos&nbsp;&nbsp;&nbsp;</a></li>
                                 @endif
                                 @if (Auth::user()->isAdmin())
                                 <li><a class="dropdown-item" href="{{ route('admin.users') }}">&nbsp;&nbsp;&nbsp;Gestão de Utilizadores&nbsp;&nbsp;&nbsp;</a></li>
