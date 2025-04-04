@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lesson extends Model
+class Module extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
-        'description',
         'course_id',
-        'module_id',
-        'video_url',
         'order'
     ];
 
@@ -23,13 +20,8 @@ class Lesson extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function module()
+    public function lessons()
     {
-        return $this->belongsTo(Module::class);
-    }
-
-    public function studentProgress()
-    {
-        return $this->hasMany(StudentProgress::class);
+        return $this->hasMany(Lesson::class)->orderBy('order');
     }
 }

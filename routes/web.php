@@ -45,6 +45,8 @@ Route::middleware(['auth', 'role:aluno'])->prefix('dashboard/aluno')->group(func
 
 // Rotas para formadores
 Route::middleware(['auth', 'role:formador'])->prefix('dashboard/formador')->group(function () {
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
+    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
     Route::get('/', [DashboardController::class, 'formador'])->name('dashboard.formador');
     Route::get('/meus-cursos', [FormadorController::class, 'courses'])->name('formador.courses');
     Route::get('/criar-curso', [FormadorController::class, 'create'])->name('formador.course.create');
@@ -95,4 +97,11 @@ Route::middleware(['auth', CheckRole::class.':admin'])->prefix('dashboard/admin'
     // Previsualização
     Route::get('/preview/aluno', [AdminController::class, 'previewAluno'])->name('admin.preview.aluno');
     Route::get('/preview/formador', [AdminController::class, 'previewFormador'])->name('admin.preview.formador');
+
+    // Gerenciamento de módulos
+    Route::get('/courses/{courseId}/modules/create', [CourseController::class, 'createModule'])->name('courses.modules.create');
+    Route::post('/courses/{courseId}/modules', [CourseController::class, 'storeModule'])->name('courses.modules.store');
+    Route::get('/courses/{courseId}/modules/{moduleId}/edit', [CourseController::class, 'editModule'])->name('courses.modules.edit');
+    Route::put('/courses/{courseId}/modules/{moduleId}', [CourseController::class, 'updateModule'])->name('courses.modules.update');
+    Route::delete('/courses/{courseId}/modules/{moduleId}', [CourseController::class, 'destroyModule'])->name('courses.modules.destroy');
 });
