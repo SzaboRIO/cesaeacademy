@@ -114,7 +114,6 @@ class CourseController extends Controller
     public function store(Request $request)
     {
 
-        dd(Auth::id());
         // Validar dados do curso
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -127,6 +126,10 @@ class CourseController extends Controller
             'image' => 'required|image|max:2048',
             'video_url' => 'required|string|max:255',
         ]);
+
+        $validated['user_id'] = Auth::id();
+
+        
 
         // Processar tags
         if (!empty($validated['tags'])) {
@@ -196,5 +199,7 @@ class CourseController extends Controller
             return back()->withInput()
                 ->with('error', 'Ocorreu um erro ao criar o curso: ' . $e->getMessage());
         }
+
+
     }
 }
