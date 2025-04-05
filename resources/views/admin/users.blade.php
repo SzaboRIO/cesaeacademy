@@ -325,7 +325,7 @@
 
         // Defina a ação do formulário para a rota de exclusão, por exemplo:
         // Assumindo que sua rota DELETE está em /dashboard/admin/excluir-utilizador/{id}
-        document.getElementById('deleteUserForm').action = `/dashboard/admin/excluir-utilizador/${userId}`;
+        document.getElementById('deleteUserForm').action = `/excluir-utilizador/${userId}`;
 
         // Exiba o modal
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));

@@ -129,7 +129,7 @@ class CourseController extends Controller
 
         $validated['user_id'] = Auth::id();
 
-        
+
 
         // Processar tags
         if (!empty($validated['tags'])) {
@@ -201,5 +201,57 @@ class CourseController extends Controller
         }
 
 
+    }
+
+    public function adminIndex(Request $request)
+    {
+        // Inicia a query de courses
+        $query = Course::query();
+
+
+        // 1. FILTROS DE PESQUISA
+
+        // Filtro de busca por título ou descrição
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtro por status (ex.: pendente, aprovado etc.)
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        // 2. ORDENAÇÃO
+
+        // Colunas válidas para 'sort'
+        $sortableColumns = ['id', 'title', 'status', 'created_at', 'formador'];
+
+        // Pega parâmetros de ordenação
+        $sort = $request->get('sort', 'id');  // se não vier nada, ordena por id
+        $direction = $request->get('direction') === 'desc' ? 'desc' : 'asc'; // default asc
+
+        // SEMPRE fazer join e selecionar o alias:
+        $query->leftJoin('users', 'users.id', '=', 'courses.user_id')
+            ->select('courses.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as formador"));
+
+        // Aí depois trata a ordenação
+        if ($sort === 'formador') {
+            $query->orderBy('formador', $direction);
+        } elseif (in_array($sort, ['id','title','status','created_at'])) {
+            $query->orderBy($sort, $direction);
+        } else {
+            $query->orderBy('id', 'asc'); // ordenação padrão
+        }
+
+        // 3. PAGINAÇÃO
+
+        $courses = $query->paginate(10);
+
+
+        return view('admin.courses', compact('courses'));
     }
 }

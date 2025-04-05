@@ -558,3 +558,257 @@ form textarea {
     background-position: right 0.75rem center !important;
     background-size: 10px 6px !important;
 }
+
+/* style das tags de busca */
+.tags a {
+    color: #e2c8e4 !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* tags de busca on hover */
+.tags a:hover {
+    color: #e2c8e4;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+/* animações dos ícones dos video cursos - Compartilhar, Favoritar e Adicionar */
+.course-icon i:hover {
+    animation: pulse 0.5s ease;
+}
+
+/* animações dos ícones dos video cursos - Compartilhar, Favoritar e Adicionar */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1.1); }
+}
+
+/* cria margens laterais para a área de Video + Descrição nas páginas de cursos (exclusivamente para telas pequenas) */
+@media (max-width: 767.98px) { /* Bootstrap's sm breakpoint */
+    .custom-sm-padding {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* Content box da subscrição na newsletter */
+.box-videos {
+    background-color: #36236a;
+    color: #e2c8e4;
+    text-align: center;
+    border-radius: 40px;
+}
+
+
+/* Border-radius dos itens do acordeão de videos */
+.accordion-item {
+    border-radius: 24px !important;
+    margin-bottom: 24px;
+    overflow: hidden; /* Garante que o radius funcione */
+    transition: transform 0.2s ease;
+}
+
+/* Itens do acordeão on hover */
+.accordion-item:hover {
+    transform: translateX(-7px);
+}
+
+/* Aplica apenas quando um módulo do acordeão está ABERTO */
+.accordion-button:not(.collapsed) {
+    background-color: #36236a !important;
+    color: white !important;
+}
+
+/* Garante que o ícone também fique branco */
+.accordion-button:not(.collapsed) .bi-play-circle {
+    color: white !important;
+}
+
+/* Remove a borda azul inferior do acordeão quando aberto */
+.accordion-button:not(.collapsed)::after {
+    background-image: none !important;
+}
+
+/* Remove qualquer borda adicional do acordeão */
+.accordion-button:not(.collapsed) {
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* cor do ícone de play interno do acordeão aberto */
+.bi.bi-play-circle-fill {
+    color: #36236a !important;
+}
+
+/* Botão de "Visualizar" no acordeão de videos */
+.btn.btn-sm.btn-outline-primary {
+    color: white !important;
+    background-color: #36236a !important;
+    border-color: #36236a !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px !important;
+    width: 80px; /* Mantém o tamanho baseado no conteúdo */
+    max-width: 130px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Botão de "Visualizar" no acordeão de videos on hover */
+.btn.btn-sm.btn-outline-primary:hover {
+    background-color: white !important;
+    color: #36236a  !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Estilos do body do Modal contendo o video */
+.modal-content {
+    border: 1px solid #36236a;
+    border-radius: 32px !important;
+    border: none !important;
+}
+
+/* Estilos do Modal contendo o video + garante que o cabeçalho esteja acima do vídeo*/
+.modal-header {
+    border-radius: 30px !important;
+    position: relative;
+    z-index: 2;
+    background-color: #36236a;
+}
+
+/* Estilos do Modal contendo o video + garante que o modal-body (onde está o vídeo) não sobreponha o cabeçalho */
+.modal-body {
+position: relative;
+z-index: 1;
+}
+
+/* Estilos do cabeçalho do Modal contendo o video */
+.modal-title {
+    color: #e2c8e4;
+}
+
+/* Ajusta a cor do fundo do modal projetado na página quando ele abre */
+.modal-backdrop {
+    background-color: #000;
+    opacity: 0.6 !important;
+}
+
+.review {
+    text-align: left;
+    display: block; /* Para garantir que o label ocupe toda a largura disponível */
+}
+
+.btn-review {
+    float: right;
+}
+
+.custom-margin {
+    margin-top: 80px; /* Ajuste este valor conforme necessário */
+}
+
+.rating2{
+    align-items: left;
+}
+
+.btn-teacher {
+    background-color: #e2c8e4!important;
+    border-color: #36236a  !important;
+    color: #36236a !important;
+    border-radius: 20px !important;
+    padding-left: 70px !important;
+    padding-right: 70px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    text-decoration: none !important;
+    border: 1px solid #36236a !important;
+}
+
+/* Efeito no hover botão de subscrição */
+.btn-teacher:hover {
+    background-color: #36236a !important;
+    border-color: #36236a !important;
+    color: #e2c8e4 !important;
+    border: 1px solid #36236a !important;
+    text-decoration: none !important;
+}
+
+.comment {
+    text-align: left;
+}
+
+.subscribe {
+    background-color: #e2c8e4!important;
+    border-color: #36236a  !important;
+    color: #36236a !important;
+    border-radius: 20px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    text-decoration: none !important;
+    border: 1px solid #36236a !important;
+}
+
+
+.subscribe:hover {
+    background-color: #36236a !important;
+    color: #e2c8e4 !important;
+    border: 1px solid #e2c8e4 !important;
+    text-decoration: none !important;
+}
+
+
+/* Espaçamento entre os boxes */
+.row > .col-md-6:first-child {
+    padding-right: 1rem;
+}
+
+.row > .col-md-6:last-child {
+    padding-left: 1rem;
+}
+
+/* Melhorias no box de reviews */
+.box-reviews {
+    background-color: #36236a;
+    color: #e2c8e4;
+    border-radius: 40px;
+    padding: 20px;
+    height: 100%; /* Para igualar altura com o box dos módulos */
+}
+
+/* Ajustes para mobile */
+@media (max-width: 767.98px) {
+    .row > .col-md-6:first-child,
+    .row > .col-md-6:last-child {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .box-reviews {
+        margin-top: 1.5rem;
+    }
+}
+
+/* Estilo para as setas de navegação */
+.nav-arrow {
+    color: #e2c8e4;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-arrow:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Ajuste para o texto "Ver mais reviews" */
+.reviews-list .text-light {
+    font-size: 0.9rem;
+    color: #e2c8e4 !important;
+}
+
+/* Mensagem "Foi útil?" */
+.text-util {
+    font-size: 0.9rem;
+    color: #e2c8e4 !important;
+}

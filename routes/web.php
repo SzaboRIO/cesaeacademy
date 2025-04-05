@@ -64,9 +64,7 @@ Route::middleware(['auth', CheckRole::class.':formador'])->group(function () {
 });
 
 // Rotas para administradores
-Route::middleware(['auth', CheckRole::class.':admin'])->prefix('dashboard/admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'admin'])->name('dashboard.admin');
-
+Route::middleware(['auth', CheckRole::class.':admin'])->group(function () {
     // Gerenciamento de usuários
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/novo-utilizador', [AdminController::class, 'createUser'])->name('admin.create_user');
@@ -77,7 +75,9 @@ Route::middleware(['auth', CheckRole::class.':admin'])->prefix('dashboard/admin'
     Route::delete('/excluir-utilizador/{id}', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
 
     // Gerenciamento de cursos
-    Route::get('/gerir-cursos', [AdminController::class, 'courses'])->name('admin.courses');
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
+    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/admin/cursos', [CourseController::class, 'adminIndex'])->name('admin.courses');
     Route::get('/curso/{id}', [AdminController::class, 'showCourse'])->name('admin.course.show');
     Route::get('/aprovar-curso/{id}', [AdminController::class, 'approveCourse'])->name('admin.course.approve');
     Route::get('/rejeitar-curso/{id}', [AdminController::class, 'rejectCourse'])->name('admin.course.reject');

@@ -117,7 +117,7 @@
                                 @endif
                                 @if (Auth::user()->isAdmin())
                                 <li><a class="dropdown-item" href="{{ route('admin.users') }}">&nbsp;&nbsp;&nbsp;Gestão de Utilizadores&nbsp;&nbsp;&nbsp;</a></li>
-                                <li><a class="dropdown-item" href="delopment.html">&nbsp;&nbsp;&nbsp;Gestão de Cursos&nbsp;&nbsp;&nbsp;</a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.courses') }}">&nbsp;&nbsp;&nbsp;Gestão de Cursos&nbsp;&nbsp;&nbsp;</a></li>
                                 @endif
                             </ul>
                         </li>

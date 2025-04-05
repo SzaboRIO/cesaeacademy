@@ -3,8 +3,8 @@
 @section('content')
 
 <div class="barra-roxa">
-    <h1>Gestão de Utilizadores</h1>
-    <p>Aqui pode gerir todos os utilizadores (pesquisar, editar, excluir).</p>
+    <h1>Gestão de Cursos</h1>
+    <p>Aqui pode gerir todos os cursos (aprovar para publicação,pesquisar, editar, excluir).</p>
 </div>
 
 <!-- INÍCIO DO CONTEÚDO DA PÁGINA COM MARGENS -->
@@ -61,21 +61,17 @@
             <div class="col-md-8 offset-md-2">
 
                 <!-- Contêiner Roxo (externo) -->
-                <div class="my-5 p-4"
-                     style="background-color: #36236a;
-                            border-radius: 8px;">
+                <div class="my-5 p-4" style="background-color: #36236a; border-radius: 8px;">
 
                     <!-- Bloco Branco (interno) -->
-                    <div class="p-4"
-                         style="background-color: #fff;
-                                border-radius: 8px;">
+                    <div class="p-4" style="background-color: #fff; border-radius: 8px;">
 
                         <!-- Filtros -->
-                        <form action="{{ route('admin.users') }}" method="GET" class="row g-3">
+                        <form action="{{ route('admin.courses') }}" method="GET" class="row g-3">
                             @csrf
 
                             <div class="col-md-5">
-                                <label for="search" class="form-label">Nome ou Email</label>
+                                <label for="search" class="form-label">Título ou Descrição</label>
                                 <input
                                     type="text"
                                     class="form-control bs-default"
@@ -87,21 +83,23 @@
                             </div>
 
                             <div class="col-md-5">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-select" id="role" name="role">
-                                    <option value="" {{ request('role') == '' ? 'selected' : '' }}>Todos</option>
-                                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
-                                    <option value="formador" {{ request('role') == 'formador' ? 'selected' : '' }}>Formador</option>
-                                    <option value="aluno" {{ request('role') == 'aluno' ? 'selected' : '' }}>Aluno</option>
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="" {{ request('status') == '' ? 'selected' : '' }}>Todos</option>
+                                    <option value="pendente" {{ request('status') == 'pendente' ? 'selected' : '' }}>Pendente</option>
+                                    <option value="aprovado" {{ request('status') == 'aprovado' ? 'selected' : '' }}>Aprovado</option>
+                                    <option value="rejeitado" {{ request('status') == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
                                 </select>
                             </div>
 
                             <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-outline-primary my-2 my-sm-0 btn-register">Procurar</button>
+                                <button type="submit" class="btn btn-outline-primary my-2 my-sm-0 btn-register">
+                                    Procurar
+                                </button>
                             </div>
                         </form>
 
-                        <!-- Lista de Usuários -->
+                        <!-- Lista de Cursos -->
                         <div class="card mt-4">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
@@ -110,9 +108,9 @@
                                             <tr>
                                                 <th scope="col" style="width: 60px; text-align: left">
                                                     <!-- Link para ordenar por "id" -->
-                                                    <a href="{{ route('admin.users', [
+                                                    <a href="{{ route('admin.courses', [
                                                         'search' => request('search'),
-                                                        'role' => request('role'),
+                                                        'status' => request('status'),
                                                         'sort' => 'id',
                                                         'direction' => (request('sort') === 'id' && request('direction') === 'desc') ? 'asc' : 'desc',
                                                     ]) }}" class="text-dark">
@@ -130,15 +128,15 @@
                                                 </th>
 
                                                 <th scope="col">
-                                                    <!-- Link para ordenar por "firstname" -->
-                                                    <a href="{{ route('admin.users', [
+                                                    <!-- Link para ordenar por "title" -->
+                                                    <a href="{{ route('admin.courses', [
                                                         'search' => request('search'),
-                                                        'role' => request('role'),
-                                                        'sort' => 'firstname',
-                                                        'direction' => (request('direction') === 'asc' && request('sort') === 'firstname') ? 'desc' : 'asc',
+                                                        'status' => request('status'),
+                                                        'sort' => 'title',
+                                                        'direction' => (request('sort') === 'title' && request('direction') === 'asc') ? 'desc' : 'asc',
                                                     ]) }}" class="text-dark">
-                                                        Nome
-                                                        @if (request('sort') === 'firstname')
+                                                        Título
+                                                        @if (request('sort') === 'title')
                                                             @if (request('direction') === 'asc')
                                                                 <i class="fas fa-sort-up"></i>
                                                             @else
@@ -151,15 +149,15 @@
                                                 </th>
 
                                                 <th scope="col" style="width: 60px; text-align: left">
-                                                    <!-- Link para ordenar por "email" -->
-                                                    <a href="{{ route('admin.users', [
+                                                    <!-- Link para ordenar por "formador" -->
+                                                    <a href="{{ route('admin.courses', [
                                                         'search' => request('search'),
-                                                        'role' => request('role'),
-                                                        'sort' => 'email',
-                                                        'direction' => (request('direction') === 'asc' && request('sort') === 'email') ? 'desc' : 'asc',
+                                                        'status' => request('status'),
+                                                        'sort' => 'formador',
+                                                        'direction' => (request('sort') === 'formador' && request('direction') === 'asc') ? 'desc' : 'asc',
                                                     ]) }}" class="text-dark">
-                                                        Email
-                                                        @if (request('sort') === 'email')
+                                                        Formador
+                                                        @if (request('sort') === 'formador')
                                                             @if (request('direction') === 'asc')
                                                                 <i class="fas fa-sort-up"></i>
                                                             @else
@@ -171,50 +169,44 @@
                                                     </a>
                                                 </th>
 
-                                                <th scope="col">Role</th>
-                                                <th scope="col">Registo</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Data de Criação</th>
                                                 <th scope="col" style="width: 120px;">Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($users as $user)
-                                                <tr class="user-row align-middle" data-user-id="{{ $user->id }}">
-                                                    <td>{{ $user->id }}</td>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="me-3">
-                                                                @if($user->avatar)
-                                                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->firstname }}"
-                                                                        class="rounded-circle" width="40" height="40" style="object-fit: cover;">
-                                                                @else
-                                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
-                                                                        style="width: 40px; height: 40px;">
-                                                                        {{ strtoupper(substr($user->firstname, 0, 1)) }}
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div>
-                                                                <h6 class="mb-0">{{ $user->firstname }} {{ $user->lastname }}</h6>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{ $user->email }}</td>
+                                            @forelse($courses as $course)
+                                                <tr class="course-row align-middle" data-course-id="{{ $course->id }}">
+                                                    <td>{{ $course->id }}</td>
+                                                    <td>{{ $course->title }}</td>
+                                                    <td>{{ $course->formador }}</td>
                                                     <td class="text-center">
-                                                        @if($user->role == 'admin')
-                                                            <span class="badge bg-dark">Administrador</span>
-                                                        @elseif($user->role == 'formador')
-                                                            <span class="badge bg-success">Formador</span>
+                                                        @if($course->status == 'aprovado')
+                                                            <span class="badge bg-success">Aprovado</span>
+                                                        @elseif($course->status == 'pendente')
+                                                            <span class="badge bg-warning">Pendente</span>
                                                         @else
-                                                            <span class="badge bg-primary">Aluno</span>
+                                                            <span class="badge bg-danger">Rejeitado</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">{{ $course->created_at->format('d/m/Y') }}</td>
                                                     <td class="text-center align-midle">
                                                         <div class="btn-group" role="group">
+                                                            <!-- Botão verde (Aprovação) -->
+                                                            <a
+                                                                class="btn btn-sm btn-success rounded-start-3 edit-user-btn"
+                                                                href=""
+                                                            >
+                                                                <!-- Ícone (check) -->
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                                    <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                                                </svg>
+                                                            </a>
                                                             <!-- Botão amarelo (Edição) -->
                                                             <a
-                                                                class="btn btn-sm btn-warning rounded-start-3 edit-user-btn"
-                                                                href="{{ route('admin.edit_user', $user->id) }}"
+                                                                class="btn btn-sm btn-warning edit-user-btn"
+                                                                href=""
                                                             >
                                                                 <!-- Ícone (caneta) -->
                                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -225,31 +217,28 @@
                                                                      <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
                                                                 </svg>
                                                             </a>
-
-                                                            @if($user->id != Auth::id())
-                                                                <!-- Botão vermelho (Excluir) -->
-                                                                <button
-                                                                    type="button"
-                                                                    class="btn btn-sm btn-danger rounded-end-3 delete-user-btn"
-                                                                    data-user-id="{{ $user->id }}"
-                                                                >
-                                                                    <!-- Ícone (lixeira) -->
-                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                         width="16" height="16"
-                                                                         fill="currentColor"
-                                                                         class="bi bi-trash">
-                                                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                                                    </svg>
-                                                                </button>
-                                                            @endif
+                                                            <!-- Botão vermelho (Excluir) -->
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-sm btn-danger rounded-end-3 delete-user-btn"
+                                                                data-user-id="{{ $course->id }}"
+                                                            >
+                                                                <!-- Ícone (lixeira) -->
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        width="16" height="16"
+                                                                        fill="currentColor"
+                                                                        class="bi bi-trash">
+                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                                                </svg>
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="6" class="text-center py-4">
-                                                        <p class="mb-0 text-muted">Nenhum usuário encontrado.</p>
+                                                    <td colspan="5" class="text-center py-4">
+                                                        <p class="mb-0 text-muted">Nenhum curso encontrado.</p>
                                                     </td>
                                                 </tr>
                                             @endforelse
@@ -258,22 +247,25 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Paginação super-minimalista: apenas setas e número da página -->
                         <div class="d-flex justify-content-end mt-3">
                             <nav aria-label="Navegação">
                                 <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item {{ $users->onFirstPage() ? 'disabled' : '' }}">
-                                        <a class="page-link" href="{{ $users->previousPageUrl() ? $users->previousPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}" aria-label="Anterior">
+                                    <li class="page-item {{ $courses->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link"
+                                           href="{{ $courses->previousPageUrl() ? $courses->previousPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
+                                           aria-label="Anterior">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
-
                                     <li class="page-item disabled">
-                                        <span class="page-link">{{ $users->currentPage() }}</span>
+                                        <span class="page-link">{{ $courses->currentPage() }}</span>
                                     </li>
-
-                                    <li class="page-item {{ !$users->hasMorePages() ? 'disabled' : '' }}">
-                                        <a class="page-link" href="{{ $users->nextPageUrl() ? $users->nextPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}" aria-label="Próxima">
+                                    <li class="page-item {{ !$courses->hasMorePages() ? 'disabled' : '' }}">
+                                        <a class="page-link"
+                                           href="{{ $courses->nextPageUrl() ? $courses->nextPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
+                                           aria-label="Próxima">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -282,8 +274,9 @@
                         </div>
                         <br>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{{ route('admin.create_user') }}" class="btn btn-outline-primary my-2 my-sm-0 btn-register">
-                                Criar Utilizador
+                            <!-- Criação Manual de Curso (se quiser) -->
+                            <a href="{{ route('courses.create') }}" class="btn btn-outline-primary my-2 my-sm-0 btn-register">
+                                Criar Curso
                             </a>
                         </div>
                     </div>
@@ -294,20 +287,20 @@
 </div>
 
 <!-- Modal de Confirmação de Exclusão -->
-<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteCourseModal" tabindex="-1" aria-labelledby="deleteCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteUserModalLabel">Confirmar Exclusão</h5>
+                <h5 class="modal-title" id="deleteCourseModalLabel">Confirmar Exclusão</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.</p>
-                <p class="text-danger">Atenção: Todos os dados associados a este usuário serão excluídos.</p>
+                <p>Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.</p>
+                <p class="text-danger">Atenção: Todos os dados associados a este curso serão excluídos.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteUserForm" action="" method="POST">
+                <form id="deleteCourseForm" action="" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Excluir</button>
@@ -318,20 +311,15 @@
 </div>
 
 <script>
-    document.querySelectorAll('.delete-user-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        // Obtenha o ID do usuário a partir de um data-attribute (certifique-se que a linha do usuário possua data-user-id="{{ $user->id }}")
-        const userId = this.closest('.user-row').dataset.userId;
-
-        // Defina a ação do formulário para a rota de exclusão, por exemplo:
-        // Assumindo que sua rota DELETE está em /dashboard/admin/excluir-utilizador/{id}
-        document.getElementById('deleteUserForm').action = `/dashboard/admin/excluir-utilizador/${userId}`;
-
-        // Exiba o modal
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
-        deleteModal.show();
+    // Script para chamar o modal de exclusão
+    document.querySelectorAll('.delete-course-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const courseId = this.dataset.courseId;
+            document.getElementById('deleteCourseForm').action = `/cursos/${courseId}`;
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteCourseModal'));
+            deleteModal.show();
+        });
     });
-});
 </script>
 
 @endsection
