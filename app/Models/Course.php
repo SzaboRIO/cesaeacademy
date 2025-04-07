@@ -39,24 +39,9 @@ class Course extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function instructor()
-    {
-        return $this->belongsTo(User::class, 'instructor_id');
-    }
-
     public function modules()
     {
         return $this->hasMany(Module::class)->orderBy('order');
-    }
-
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class);
-    }
-
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class);
     }
 
     public function reviews()
@@ -78,5 +63,9 @@ class Course extends Model
     public function getStudentsCountAttribute()
     {
         return $this->enrollments()->count();
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

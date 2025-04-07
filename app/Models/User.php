@@ -20,6 +20,7 @@ class User extends Authenticatable
         'profession',
         'role',
         'avatar',
+        'biography',
     ];
 
     protected $hidden = [

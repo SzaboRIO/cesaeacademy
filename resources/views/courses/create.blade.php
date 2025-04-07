@@ -28,6 +28,19 @@
                         <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
+                            <!-- Status (para admin only) -->
+                            @if (Auth::user()->isAdmin())
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select form-select-purple" id="status" name="status">
+                                        <option value="">Selecione o status</option>
+                                        <option value="pendente" {{ old('status') == 'pendente' ? 'selected' : '' }}>Pendente</option>
+                                        <option value="aprovado" {{ old('status') == 'aprovado' ? 'selected' : '' }}>Aprovado</option>
+                                        <option value="rejeitado" {{ old('status') == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
+                                    </select>
+                                </div>
+                            @endif
+
                             <!-- Título do Curso -->
                             <div class="mb-3">
                                 <label for="title" class="form-label">Título do Curso</label>
@@ -169,13 +182,13 @@
                                     </div>
 
                                     <div class="lessons-container">
-                                        <h6 class="mb-3">Aulas</h6>
+                                        <h5 class="mb-3">Aulas</h5>
 
                                         <div class="lesson-item mb-3 p-2 border rounded">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <h6>Aula 1</h6>
+                                                <h5>Aula 1</h5>
                                                 <button type="button" class="btn btn-sm btn-danger remove-lesson" style="display:none;">
-                                                    <i class="bi bi-trash"></i>
+                                                    <i class="bi bi-trash"></i> Remover
                                                 </button>
                                             </div>
 
@@ -207,7 +220,6 @@
                             </button>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ route('courses.index') }}" class="btn btn-secondary me-2">Cancelar</a>
                                 <button type="submit" class="btn btn-outline-primary my-2 my-sm-0 btn-register">Salvar Curso</button>
                             </div>
                         </form>
@@ -250,11 +262,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <div class="lessons-container">
-                    <h6 class="mb-3">Aulas</h6>
+                    <h5 class="mb-3">Aulas</h5>
 
                     <div class="lesson-item mb-3 p-2 border rounded">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6>Aula 1</h6>
+                            <h5>Aula 1</h5>
                             <button type="button" class="btn btn-sm btn-danger remove-lesson" style="display:none;">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -321,9 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const lessonHtml = `
             <div class="lesson-item mb-3 p-2 border rounded">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6>Aula ${lessonIndex + 1}</h6>
+                    <h5>Aula ${lessonIndex + 1}</h5>
                     <button type="button" class="btn btn-sm btn-danger remove-lesson">
-                        <i class="bi bi-trash"></i>
+                        <i class="bi bi-trash"></i> Remover
                     </button>
                 </div>
 
@@ -362,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Atualizar a numeração das aulas
         lessonItems.forEach((item, index) => {
-            item.querySelector('h6').textContent = `Aula ${index + 1}`;
+            item.querySelector('h5').textContent = `Aula ${index + 1}`;
 
             // Atualizar os nomes dos campos
             const moduleIndex = moduleItem.querySelector('.add-lesson').getAttribute('data-module-index');

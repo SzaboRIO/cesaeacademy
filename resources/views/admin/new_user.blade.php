@@ -118,6 +118,17 @@
                             </div>
 
                             <div class="mb-3">
+                                <label for="biography" class="form-label">Biografia</label>
+                                <textarea
+                                    class="form-control"
+                                    id="biography"
+                                    name="biography"
+                                    rows="4"
+                                    >{{ old('biography', Auth::user()->biography) }}
+                                </textarea>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input
                                     type="email"

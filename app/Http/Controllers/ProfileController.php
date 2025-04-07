@@ -31,6 +31,7 @@ class ProfileController extends Controller
             'lastname' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'profession' => ['nullable', 'string', 'max:255'],
+            'biography' => ['nullable', 'string'],
             'current_password' => ['nullable', 'required_with:password', function ($attribute, $value, $fail) use ($user) {
                 if (!Hash::check($value, $user->password)) {
                     $fail('A senha atual está incorreta.');
@@ -45,6 +46,7 @@ class ProfileController extends Controller
         $user->lastname = $validated['lastname'];
         $user->email = $validated['email'];
         $user->profession = $validated['profession'];
+        $user->biography = $validated['biography'];
 
         // Atualizar avatar, se fornecido
         if (isset($validated['avatar'])) {

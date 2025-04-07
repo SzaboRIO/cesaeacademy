@@ -4,7 +4,7 @@
 
 <div class="barra-roxa">
     <h1>Gestão de Cursos</h1>
-    <p>Aqui pode gerir todos os cursos (aprovar para publicação, pesquisar, editar e excluir).</p>
+    <p>Aqui pode gerir todos os seus cursos (pesquisar, criar, editar e excluir).</p>
 </div>
 
 <!-- INÍCIO DO CONTEÚDO DA PÁGINA COM MARGENS -->
@@ -67,7 +67,7 @@
                     <div class="p-4" style="background-color: #fff; border-radius: 8px;">
 
                         <!-- Filtros -->
-                        <form action="{{ route('admin.courses') }}" method="GET" class="row g-3">
+                        <form action="{{ route('formador.courses') }}" method="GET" class="row g-3">
                             @csrf
 
                             <div class="col-md-5">
@@ -108,7 +108,7 @@
                                             <tr>
                                                 <th scope="col" style="width: 60px; text-align: left">
                                                     <!-- Link para ordenar por "id" -->
-                                                    <a href="{{ route('admin.courses', [
+                                                    <a href="{{ route('formador.courses', [
                                                         'search' => request('search'),
                                                         'status' => request('status'),
                                                         'sort' => 'id',
@@ -129,7 +129,7 @@
 
                                                 <th scope="col">
                                                     <!-- Link para ordenar por "title" -->
-                                                    <a href="{{ route('admin.courses', [
+                                                    <a href="{{ route('formador.courses', [
                                                         'search' => request('search'),
                                                         'status' => request('status'),
                                                         'sort' => 'title',
@@ -137,27 +137,6 @@
                                                     ]) }}" class="text-dark">
                                                         Título
                                                         @if (request('sort') === 'title')
-                                                            @if (request('direction') === 'asc')
-                                                                <i class="fas fa-sort-up"></i>
-                                                            @else
-                                                                <i class="fas fa-sort-down"></i>
-                                                            @endif
-                                                        @else
-                                                            <i class="fas fa-sort"></i>
-                                                        @endif
-                                                    </a>
-                                                </th>
-
-                                                <th scope="col" style="width: 60px; text-align: left">
-                                                    <!-- Link para ordenar por "formador" -->
-                                                    <a href="{{ route('admin.courses', [
-                                                        'search' => request('search'),
-                                                        'status' => request('status'),
-                                                        'sort' => 'formador',
-                                                        'direction' => (request('sort') === 'formador' && request('direction') === 'asc') ? 'desc' : 'asc',
-                                                    ]) }}" class="text-dark">
-                                                        Formador
-                                                        @if (request('sort') === 'formador')
                                                             @if (request('direction') === 'asc')
                                                                 <i class="fas fa-sort-up"></i>
                                                             @else
@@ -179,7 +158,6 @@
                                                 <tr class="course-row align-middle" data-course-id="{{ $course->id }}">
                                                     <td>{{ $course->id }}</td>
                                                     <td>{{ $course->title }}</td>
-                                                    <td>{{ $course->formador }}</td>
                                                     <td class="text-center">
                                                         @if($course->status == 'aprovado')
                                                             <span class="badge bg-success">Aprovado</span>
@@ -192,18 +170,6 @@
                                                     <td class="text-center">{{ $course->created_at->format('d/m/Y') }}</td>
                                                     <td class="text-center align-midle">
                                                         <div class="btn-group" role="group">
-                                                            <!-- Botão verde (Aprovação) -->
-                                                            <button
-                                                                type="button"
-                                                                class="btn btn-sm btn-success rounded-start-3 approve-course-btn"
-                                                                data-course-id="{{ $course->id }}"
-                                                            >
-                                                                <!-- Ícone (check) -->
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                                                    <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                                                                </svg>
-                                                            </button>
                                                             <!-- Botão amarelo (Edição) -->
                                                             <a
                                                                 class="btn btn-sm btn-warning edit-user-btn"
@@ -274,7 +240,7 @@
                         <br>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <!-- Criação Manual de Curso (se quiser) -->
-                            <a href="{{ route('courses.create.admin') }}" class="btn btn-outline-primary my-2 my-sm-0 btn-register">
+                            <a href="{{ route('courses.create.formador') }}" class="btn btn-outline-primary my-2 my-sm-0 btn-register">
                                 Criar Curso
                             </a>
                         </div>
@@ -309,30 +275,6 @@
     </div>
 </div>
 
-<!-- Modal de Confirmação de Aprovação -->
-<div class="modal fade" id="approveCourseModal" tabindex="-1" aria-labelledby="approveCourseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="approveCourseModalLabel">Confirmar Aprovação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Tem certeza que deseja aprovar este curso?</p>
-                <p class="text-success">Esta ação tornará o curso visível para todos os usuários.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="approveCourseForm" action="" method="POST">
-                    @csrf
-                    @method('GET')
-                    <button type="submit" class="btn btn-success">Aprovar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     // Script para chamar o modal de exclusão
     document.querySelectorAll('.delete-course-btn').forEach(button => {
@@ -341,16 +283,6 @@
             document.getElementById('deleteCourseForm').action = `/curso/${courseId}`;
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteCourseModal'));
             deleteModal.show();
-        });
-    });
-
-    // Script para chamar o modal de aprovação
-    document.querySelectorAll('.approve-course-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const courseId = this.dataset.courseId;
-            document.getElementById('approveCourseForm').action = `/curso/${courseId}/approve`;
-            const approveModal = new bootstrap.Modal(document.getElementById('approveCourseModal'));
-            approveModal.show();
         });
     });
 </script>
