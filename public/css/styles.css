@@ -704,9 +704,7 @@ z-index: 1;
     float: right;
 }
 
-.custom-margin {
-    margin-top: 80px; /* Ajuste este valor conforme necessário */
-}
+
 
 .rating2{
     align-items: left;
@@ -811,4 +809,20 @@ z-index: 1;
 .text-util {
     font-size: 0.9rem;
     color: #e2c8e4 !important;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: rgba(54, 35, 106, 0.1); /* Um tom leve de roxo */
+}
+
+.collapsed-text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4; /* Defina o número de linhas desejado */
+    text-overflow: clip;
 }

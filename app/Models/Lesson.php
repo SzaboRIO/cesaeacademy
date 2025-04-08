@@ -31,4 +31,12 @@ class Lesson extends Model
     {
         return $this->hasMany(StudentProgress::class);
     }
+
+    public function getYoutubeVideoId()
+    {
+        preg_match('/[\\?\\&]v=([^\\?\\&]+)/', $this->video_url, $matches);
+        return isset($matches[1]) ? $matches[1] : $this->video_url;
+    }
+
+
 }

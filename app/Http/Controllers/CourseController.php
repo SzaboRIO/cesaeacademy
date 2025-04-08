@@ -6,10 +6,14 @@ use App\Models\Course;
 use App\Models\Module;
 use App\Models\Lesson;
 use App\Models\Category;
+use App\Models\Enrollment;
+use App\Models\StudentProgress;
+use App\Models\Favorite;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
 
 class CourseController extends Controller
 {
@@ -51,14 +55,84 @@ class CourseController extends Controller
         return $this->belongsTo(Category::class);
     }
 
-    public function show($slug)
+    public function showBySlug($slug)
     {
         $course = Course::where('slug', $slug)
             ->where('status', 'aprovado')
+            ->with(['modules.lessons', 'user', 'category']) // Carrega módulos, lições, autor e categoria
             ->firstOrFail();
 
-        return view('curso.show', compact('course'));
+        // Verificar se o usuário está autenticado
+        if (Auth::check()) {
+            // Verificar se o usuário está matriculado neste curso
+            $enrollment = Enrollment::where('user_id', Auth::id())
+                ->where('course_id', $course->id)
+                ->first();
+
+            // Carregar o progresso do aluno se estiver matriculado
+            if ($enrollment) {
+                // Carregar todas as lições que o aluno já concluiu
+                $completedLessons = StudentProgress::where('enrollment_id', $enrollment->id)
+                    ->where('completed', true)
+                    ->pluck('lesson_id')
+                    ->toArray();
+
+                // Calcular a porcentagem de progresso
+                $totalLessons = 0;
+                foreach ($course->modules as $module) {
+                    $totalLessons += $module->lessons->count();
+                }
+
+                $progressPercentage = $totalLessons > 0
+                    ? round(count($completedLessons) / $totalLessons * 100)
+                    : 0;
+
+                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage'));
+            }
+        }
+
+        // Se o usuário não estiver matriculado, apenas mostra o curso
+        return view('courses.show', compact('course'));
     }
+
+    public function showById($id)
+    {
+
+        $course = Course::where('id', $id)
+            ->where('status', 'aprovado')
+            ->with(['modules.lessons', 'user', 'category']) // Carrega módulos, lições, autor e categoria
+            ->firstOrFail();
+
+        // Se o usuário estiver autenticado, verifica a inscrição
+        if (Auth::check()) {
+            $enrollment = Enrollment::where('user_id', Auth::id())
+                ->where('course_id', $course->id)
+                ->first();
+
+            // Se o usuário estiver matriculado, calcula o progresso
+            if ($enrollment) {
+                $completedLessons = \App\Models\StudentProgress::where('enrollment_id', $enrollment->id)
+                    ->where('completed', true)
+                    ->pluck('lesson_id')
+                    ->toArray();
+
+                $totalLessons = 0;
+                foreach ($course->modules as $module) {
+                    $totalLessons += $module->lessons->count();
+                }
+
+                $progressPercentage = $totalLessons > 0
+                    ? round((count($completedLessons) / $totalLessons) * 100)
+                    : 0;
+
+                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage'));
+            }
+        }
+
+        // Se o usuário não estiver matriculado, apenas mostra o curso
+        return view('courses.show', compact('course'));
+    }
+
 
     public function showByArea($area)
     {
@@ -105,10 +179,16 @@ class CourseController extends Controller
             ->with('success', 'Módulo adicionado com sucesso!');
     }
 
-    public function create()
+    public function AdminCreate()
     {
         $categories = Category::all();
-        return view('courses.create', compact('categories'));
+        return view('admin.new_course', compact('categories'));
+    }
+
+    public function FormadorCreate()
+    {
+        $categories = Category::all();
+        return view('formador.new_course', compact('categories'));
     }
 
     public function store(Request $request)
@@ -449,6 +529,31 @@ class CourseController extends Controller
                 });
             })
             ->when($request->filled('area'), function ($query) use ($request) {
+                $query->whereHas('course', function ($q) use ($request) {
+                    $q->where('category_id', $request->area);
+                });
+            })
+
+            ->paginate(10);
+
+        return view('aluno.courses', compact('enrollments'));
+    }
+
+    public function studentFavorites(Request $request)
+    {
+        $user = Auth::user();
+
+        // Buscando os favoritos do aluno, trazendo também o curso com seus relacionamentos
+        $favorites = \App\Models\Favorite::with(['course.user', 'course.category'])
+            ->where('user_id', $user->id)
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
+                $query->whereHas('course', function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->filled('area'), function ($query) use ($request) {
                 $area = $request->area;
                 $query->whereHas('course.category', function ($q) use ($area) {
                     $q->where('area', $area);
@@ -456,9 +561,34 @@ class CourseController extends Controller
             })
             ->paginate(10);
 
-        return view('aluno.courses', compact('enrollments'));
+        return view('aluno.favorites', compact('favorites'));
     }
 
+    public function studentCompletedCourses(Request $request)
+    {
+        $user = Auth::user();
+
+        // Buscando as matrículas concluídas do aluno
+        $completedEnrollments = \App\Models\Enrollment::with(['course.user', 'course.category'])
+            ->where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
+                $query->whereHas('course', function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->filled('area'), function ($query) use ($request) {
+                $area = $request->area;
+                $query->whereHas('course.category', function ($q) use ($area) {
+                    $q->where('area', $area);
+                });
+            })
+            ->paginate(10);
+
+        return view('aluno.completed', compact('completedEnrollments'));
+    }
 
     public function approveCourse($id)
     {
@@ -488,5 +618,47 @@ class CourseController extends Controller
         $course->delete();
 
         return redirect()->back()->with('success', 'Curso excluído com sucesso!');
+    }
+
+    public function toggleFavorite($course_id)
+    {
+        $user = Auth::user();
+        $course = Course::findOrFail($course_id);
+
+        // Verificar se o usuário já está matriculado neste curso
+        $isEnrolled = \App\Models\Enrollment::where('user_id', $user->id)
+                        ->where('course_id', $course_id)
+                        ->exists();
+
+        if ($isEnrolled) {
+            return redirect()->back()->with('error', 'Você já está matriculado neste curso, não é possível favoritá-lo.');
+        }
+
+        // Verificar se o curso já está nos favoritos
+        $existingFavorite = Favorite::where('user_id', $user->id)
+                            ->where('course_id', $course_id)
+                            ->first();
+
+        if ($existingFavorite) {
+            // Se já existe, remover dos favoritos
+            $existingFavorite->delete();
+            return redirect()->back()->with('success', 'Curso removido dos favoritos.');
+        } else {
+            // Se não existe, adicionar aos favoritos
+            Favorite::create([
+                'user_id' => $user->id,
+                'course_id' => $course_id
+            ]);
+            return redirect()->back()->with('success', 'Curso adicionado aos favoritos.');
+        }
+    }
+
+    public function removeFromFavoritesWhenEnrolled($course_id, $user_id)
+    {
+        // Este método é para ser chamado quando um usuário se matricula em um curso
+        // Verificar se o curso está nos favoritos e remover
+        Favorite::where('user_id', $user_id)
+            ->where('course_id', $course_id)
+            ->delete();
     }
 }

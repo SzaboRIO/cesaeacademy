@@ -19,7 +19,8 @@ use App\Http\Middleware\CheckRole;
 // Rotas públicas
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/cursos', [CourseController::class, 'index'])->name('courses.index');
-Route::get('/curso/{slug}', [CourseController::class, 'show'])->name('courses.show');
+Route::get('/curso/{slug}', [CourseController::class, 'showBySlug'])->name('courses.showBySlug');
+//Route::get('/curso/{id}', [CourseController::class, 'showById'])->name('courses.showById');
 Route::get('/area/{area}', [CourseController::class, 'showByArea'])->name('courses.area');
 Route::get('/sobre', [HomeController::class, 'about'])->name('about');
 Route::get('/colaborar', [HomeController::class, 'collaborate'])->name('collaborate');
@@ -33,13 +34,17 @@ Route::middleware(['auth'])->group(function () {
 
 // Rotas para alunos
 Route::middleware(['auth', CheckRole::class.':aluno'])->group(function () {
-    Route::get('/aluno/cursos_em_andamento', [CourseController::class, 'studentIndex'])->name('aluno.courses');
+    Route::get('/aluno/cursos-em-andamento', [CourseController::class, 'studentIndex'])->name('aluno.courses');
+    Route::get('/aluno/favoritos', [CourseController::class, 'studentFavorites'])->name('aluno.favorites');
+    Route::post('/curso/{id}/favorito', [CourseController::class, 'toggleFavorite'])->name('course.toggle-favorite');
+    Route::get('/aluno/cursos-concluidos', [CourseController::class, 'studentCompletedCourses'])->name('aluno.completed');
+    Route::post('/aluno/completar-licao', [EnrollmentController::class, 'markAsCompleted'])->name('student.complete-lesson');
 });
 
 // Rotas para formadores
 Route::middleware(['auth', CheckRole::class.':formador'])->group(function () {
-    Route::get('/novo-curso-formador', [CourseController::class, 'create'])->name('courses.create.formador');
-    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/novo-curso-formador', [CourseController::class, 'formadorCreate'])->name('courses.create.formador');
+    Route::post('/novo-curso-formador', [CourseController::class, 'store'])->name('courses.store.formador');
     Route::get('/editar-curso/{id}', [CourseController::class, 'edit'])->name('course.edit');
     Route::put('/editar-curso/{id}', [CourseController::class, 'update'])->name('course.update');
     Route::get('/formador/cursos', [CourseController::class, 'formadorIndex'])->name('formador.courses');
@@ -56,8 +61,8 @@ Route::middleware(['auth', CheckRole::class.':admin'])->group(function () {
     Route::delete('/excluir-utilizador/{id}', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
 
     // Gerenciamento de cursos
-    Route::get('/novo-curso-admin', [CourseController::class, 'create'])->name('courses.create.admin');
-    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/novo-curso-admin', [CourseController::class, 'adminCreate'])->name('courses.create.admin');
+    Route::post('/novo-curso-admin', [CourseController::class, 'store'])->name('courses.store.admin');
     Route::get('/admin/cursos', [CourseController::class, 'adminIndex'])->name('admin.courses');
     Route::get('/editar-curso/{id}', [CourseController::class, 'edit'])->name('course.edit');
     Route::put('/editar-curso/{id}', [CourseController::class, 'update'])->name('course.update');

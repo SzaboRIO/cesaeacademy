@@ -47,13 +47,16 @@ class EnrollmentController extends Controller
 
     public function markAsCompleted(Request $request)
     {
-        $enrollment = Enrollment::where('user_id', Auth::id())
-            ->where('id', $request->enrollment_id)
+        $validated = $request->validate([
+            'enrollment_id' => 'required|exists:enrollments,id',
+            'lesson_id' => 'required|exists:lessons,id',
+        ]);
+
+        $enrollment = Enrollment::where('id', $validated['enrollment_id'])
+            ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        $lesson = Lesson::where('id', $request->lesson_id)
-            ->where('course_id', $enrollment->course_id)
-            ->firstOrFail();
+        $lesson = Lesson::findOrFail($validated['lesson_id']);
 
         // Verificar se já existe um progresso para esta aula
         $progress = StudentProgress::where('enrollment_id', $enrollment->id)
@@ -65,25 +68,29 @@ class EnrollmentController extends Controller
                 'enrollment_id' => $enrollment->id,
                 'lesson_id' => $lesson->id,
                 'completed' => true,
-                'completed_at' => Carbon::now(),
+                'completed_at' => now(),
             ]);
         } else {
             $progress->completed = true;
-            $progress->completed_at = Carbon::now();
+            $progress->completed_at = now();
         }
 
         $progress->save();
 
         // Verificar se todas as aulas foram concluídas
-        $totalLessons = $enrollment->course->lessons()->count();
+        $totalLessons = 0;
+        foreach ($enrollment->course->modules as $module) {
+            $totalLessons += $module->lessons->count();
+        }
+
         $completedLessons = $enrollment->progress()->where('completed', true)->count();
 
-        if ($completedLessons === $totalLessons) {
-            $enrollment->completed_at = Carbon::now();
+        if ($completedLessons >= $totalLessons) {
+            $enrollment->completed_at = now();
             $enrollment->save();
         }
 
-        return redirect()->back()->with('success', 'Aula marcada como concluída!');
+        return redirect()->back()->with('success', 'Aula concluída!');
     }
 
     public function enroll($courseId)
@@ -109,18 +116,13 @@ class EnrollmentController extends Controller
             'enrolled_at' => Carbon::now(),
         ]);
 
+        // Remover dos favoritos se estiver lá
+        \App\Models\Favorite::where('user_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->delete();
+
         return redirect()->route('aluno.course.show', $enrollment->id)
             ->with('success', 'Inscrição realizada com sucesso!');
-    }
-
-    public function certificates()
-    {
-        $completedEnrollments = Auth::user()->enrollments()
-            ->whereNotNull('completed_at')
-            ->with('course')
-            ->get();
-
-        return view('dashboard.aluno.certificados', compact('completedEnrollments'));
     }
 
     public function reviews()

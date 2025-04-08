@@ -108,8 +108,8 @@
                                 @endif
                                 @if (Auth::user()->isAluno())
                                 <li><a class="dropdown-item" href="{{ route('aluno.courses') }}">&nbsp;&nbsp;&nbsp;Cursos em andamento&nbsp;&nbsp;&nbsp;</a></li>
-                                <li><a class="dropdown-item" href="itnetwork.html">&nbsp;&nbsp;&nbsp;Cursos concluídos&nbsp;&nbsp;&nbsp;</a></li>
-                                <li><a class="dropdown-item" href="mediadesign.html">&nbsp;&nbsp;&nbsp;Cursos favoritos&nbsp;&nbsp;&nbsp;</a></li>
+                                <li><a class="dropdown-item" href="{{ route('aluno.completed') }}">&nbsp;&nbsp;&nbsp;Cursos concluídos&nbsp;&nbsp;&nbsp;</a></li>
+                                <li><a class="dropdown-item" href="{{ route('aluno.favorites') }}">&nbsp;&nbsp;&nbsp;Cursos favoritos&nbsp;&nbsp;&nbsp;</a></li>
                                 @endif
                                 @if (Auth::user()->isFormador())
                                 <li><a class="dropdown-item" href="{{ route('formador.courses') }}">&nbsp;&nbsp;&nbsp;Meus cursos&nbsp;&nbsp;&nbsp;</a></li>

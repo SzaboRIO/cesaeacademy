@@ -179,7 +179,7 @@
                                                 <tr class="course-row align-middle" data-course-id="{{ $course->id }}">
                                                     <td>{{ $course->id }}</td>
                                                     <td>{{ $course->title }}</td>
-                                                    <td>{{ $course->formador }}</td>
+                                                    <td class="text-center">{{ $course->formador }}</td>
                                                     <td class="text-center">
                                                         @if($course->status == 'aprovado')
                                                             <span class="badge bg-success">Aprovado</span>

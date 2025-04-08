@@ -83,13 +83,13 @@
                             </div>
 
                             <div class="col-md-5">
-                                <label for="category" class="form-label">Área</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="" {{ request('category') == '' ? 'selected' : '' }}>Todos</option>
-                                    <option value="Development" {{ request('category') == 'Development' ? 'selected' : '' }}>Development</option>
-                                    <option value="IT Network" {{ request('category') == 'IT Network' ? 'selected' : '' }}>IT Network</option>
-                                    <option value="Media Design" {{ request('category') == 'Media Design' ? 'selected' : '' }}>Media Design</option>
-                                    <option value="People" {{ request('category') == 'People' ? 'selected' : '' }}>People</option>
+                                <label for="area" class="form-label">Área</label>
+                                <select class="form-select" id="area" name="area">
+                                    <option value="">Todos</option>
+                                    <option value="1" {{ request('area') == '1' ? 'selected' : '' }}>Development</option>
+                                    <option value="2" {{ request('area') == '2' ? 'selected' : '' }}>IT Network</option>
+                                    <option value="3" {{ request('area') == '3' ? 'selected' : '' }}>Media Design</option>
+                                    <option value="4" {{ request('area') == '4' ? 'selected' : '' }}>People</option>
                                 </select>
                             </div>
 
@@ -105,7 +105,7 @@
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover mb-0">
-                                        <thead class="table-light text-center">
+                                        <thead class="table-light text-center align-middle">
                                             <tr>
                                                 <th scope="col">
                                                     <!-- Link para ordenar por "title" -->
@@ -132,7 +132,7 @@
                                                     <!-- Link para ordenar por "formador" -->
                                                     <a href="{{ route('admin.courses', [
                                                         'search' => request('search'),
-                                                        'status' => request('status'),
+                                                        'status' => request('category'),
                                                         'sort' => 'formador',
                                                         'direction' => (request('sort') === 'formador' && request('direction') === 'asc') ? 'desc' : 'asc',
                                                     ]) }}" class="text-dark">
@@ -155,24 +155,24 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($courses as $course)
-                                                <tr class="course-row align-middle" data-course-id="{{ $course->id }}">
-                                                    <td>{{ $course->title }}</td>
-                                                    <td>{{ $course->formador }}</td>
-                                                    <td>{{ $course->category }}</td>
+                                            @forelse($enrollments as $enrollment)
+                                                <tr class="course-row clickable-row align-middle" data-href="{{ route('courses.showBySlug', $enrollment->course->slug) }}">
+                                                    <td>{{ $enrollment->course->title }}</td>
+                                                    <td class="text-center">{{ $enrollment->course->user->firstname }} {{ $enrollment->course->user->lastname }}</td>
+                                                    <td class="text-center">{{ $enrollment->course->category->area }}</td>
                                                     <td class="text-center">
-                                                        @if($course->level == 'Iniciante')
+                                                        @if($enrollment->course->level == 'Iniciante')
                                                             <span class="badge bg-success">Iniciante</span>
-                                                        @elseif($course->level == 'Intermédio')
+                                                        @elseif($enrollment->course->level == 'Intermédio')
                                                             <span class="badge bg-warning">Intermédio</span>
                                                         @else
                                                             <span class="badge bg-danger">Avançado</span>
                                                         @endif
                                                     </td>
-                                                    <td class="text-center">{{ $course->created_at->format('d/m/Y') }}</td>
+                                                    <td class="text-center">{{ $enrollment->enrolled_at->format('d/m/Y') }}</td>
                                                 </tr>
                                             @empty
-                                            <td colspan="6" class="text-center py-4">
+                                            <td colspan="5" class="text-center py-4">
                                                 <p class="mb-0 text-muted">Nenhum curso encontrado.</p>
                                             </td>
                                             @endforelse
@@ -186,19 +186,19 @@
                         <div class="d-flex justify-content-end mt-3">
                             <nav aria-label="Navegação">
                                 <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item {{ $courses->onFirstPage() ? 'disabled' : '' }}">
+                                    <li class="page-item {{ $enrollments->onFirstPage() ? 'disabled' : '' }}">
                                         <a class="page-link"
-                                           href="{{ $courses->previousPageUrl() ? $courses->previousPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
+                                           href="{{ $enrollments->previousPageUrl() ? $enrollments->previousPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
                                            aria-label="Anterior">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li class="page-item disabled">
-                                        <span class="page-link">{{ $courses->currentPage() }}</span>
+                                        <span class="page-link">{{ $enrollments->currentPage() }}</span>
                                     </li>
-                                    <li class="page-item {{ !$courses->hasMorePages() ? 'disabled' : '' }}">
+                                    <li class="page-item {{ !$enrollments->hasMorePages() ? 'disabled' : '' }}">
                                         <a class="page-link"
-                                           href="{{ $courses->nextPageUrl() ? $courses->nextPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
+                                           href="{{ $enrollments->nextPageUrl() ? $enrollments->nextPageUrl().'&'.http_build_query(request()->except('page')) : '#' }}"
                                            aria-label="Próxima">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
@@ -212,5 +212,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.clickable-row').forEach(row => {
+            row.addEventListener('click', function() {
+                window.location.href = this.dataset.href;
+            });
+        });
+    });
+</script>
 
 @endsection
