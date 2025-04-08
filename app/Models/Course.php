@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
@@ -49,7 +50,6 @@ class Course extends Model
         return $this->hasMany(Review::class);
     }
 
-    // Métodos auxiliares
     public function getAverageRatingAttribute()
     {
         return $this->reviews()->avg('rating') ?? 0;
@@ -67,5 +67,15 @@ class Course extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
     }
 }

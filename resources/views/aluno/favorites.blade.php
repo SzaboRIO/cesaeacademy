@@ -105,7 +105,7 @@
                                         </thead>
                                         <tbody>
                                             @forelse($favorites as $favorite)
-                                                <tr class="clickable-row align-middle" data-href="{{ route('course.show', $favorite->course->slug) }}">
+                                                <tr class="clickable-row align-middle" data-href="{{ route('courses.showBySlug', $favorite->course->slug) }}">
                                                     <td>{{ $favorite->course->title }}</td>
                                                     <td>{{ $favorite->course->user->firstname }} {{ $favorite->course->user->lastname }}</td>
                                                     <td>{{ $favorite->course->category->area }}</td>

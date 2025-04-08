@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FormadorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
-use App\Http\Middleware\CheckRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::middleware(['auth', CheckRole::class.':aluno'])->group(function () {
     Route::post('/curso/{id}/favorito', [CourseController::class, 'toggleFavorite'])->name('course.toggle-favorite');
     Route::get('/aluno/cursos-concluidos', [CourseController::class, 'studentCompletedCourses'])->name('aluno.completed');
     Route::post('/aluno/completar-licao', [EnrollmentController::class, 'markAsCompleted'])->name('student.complete-lesson');
+    Route::post('/curso/{courseId}/matricular', [EnrollmentController::class, 'enroll'])->name('enroll');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 // Rotas para formadores

@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\Module;
 use App\Models\Lesson;
+use App\Models\Module;
+use App\Models\Review;
 use App\Models\Category;
-use App\Models\Enrollment;
-use App\Models\StudentProgress;
 use App\Models\Favorite;
+use App\Models\Enrollment;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\StudentProgress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 
 class CourseController extends Controller
@@ -62,6 +63,38 @@ class CourseController extends Controller
             ->with(['modules.lessons', 'user', 'category']) // Carrega módulos, lições, autor e categoria
             ->firstOrFail();
 
+        // >>> NOVO: Consulta para cursos sugeridos: últimos cursos da mesma área que o curso atual, exceto o próprio
+        $suggestedCourses = Course::where('status', 'aprovado')
+            ->where('id', '<>', $course->id)  // Exclui o curso atual
+            ->whereHas('category', function($query) use ($course) {
+                $query->where('area', $course->category->area);
+            })
+            ->orderBy('created_at', 'desc')  // Os mais recentes primeiro
+            ->take(4)                        // Limita a 4 cursos
+            ->get();
+
+        // CALCULA A MÉDIA DAS REVIEWS
+        $averageRating = Review::where('course_id', $course->id)->avg('rating');
+        $averageRating = $averageRating ? round($averageRating, 1) : 0;
+
+        // Carregar os reviews para o curso (ordenados dos mais recentes para os mais antigos)
+        $reviews = Review::where('course_id', $course->id)
+            ->latest()  // ou ->orderBy('created_at', 'desc')
+            ->paginate(3);
+
+        // Calcular número de cursos que o formador criou e estão aprovados
+        $approvedCoursesCount = Course::where('user_id', $course->user->id)
+            ->where('status', 'aprovado')
+            ->count();
+
+        // Calcular o número total de alunos inscritos em todos os cursos aprovados do formador:
+        // Usamos withCount para cada curso e somamos o campo enrollments_count
+        $totalEnrolled = Course::where('user_id', $course->user->id)
+            ->where('status', 'aprovado')
+            ->withCount('enrollments')
+            ->get()
+            ->sum('enrollments_count');
+
         // Verificar se o usuário está autenticado
         if (Auth::check()) {
             // Verificar se o usuário está matriculado neste curso
@@ -87,12 +120,12 @@ class CourseController extends Controller
                     ? round(count($completedLessons) / $totalLessons * 100)
                     : 0;
 
-                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage'));
+                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses'));
             }
         }
 
         // Se o usuário não estiver matriculado, apenas mostra o curso
-        return view('courses.show', compact('course'));
+        return view('courses.show', compact('course', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses'));
     }
 
     public function showById($id)
@@ -519,8 +552,9 @@ class CourseController extends Controller
         $user = Auth::user();
 
         // Buscando as inscrições do aluno, trazendo também o curso com seus relacionamentos 'user' e 'category'
-        $enrollments = \App\Models\Enrollment::with(['course.user', 'course.category'])
+        $enrollments = Enrollment::with(['course.user', 'course.category'])
             ->where('user_id', $user->id)
+            ->whereNull('completed_at') // Apenas cursos em andamento (não finalizados)
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->search;
                 $query->whereHas('course', function ($q) use ($search) {
@@ -543,8 +577,9 @@ class CourseController extends Controller
     {
         $user = Auth::user();
 
+
         // Buscando os favoritos do aluno, trazendo também o curso com seus relacionamentos
-        $favorites = \App\Models\Favorite::with(['course.user', 'course.category'])
+        $favorites = Favorite::with(['course.user', 'course.category'])
             ->where('user_id', $user->id)
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->search;
@@ -569,7 +604,7 @@ class CourseController extends Controller
         $user = Auth::user();
 
         // Buscando as matrículas concluídas do aluno
-        $completedEnrollments = \App\Models\Enrollment::with(['course.user', 'course.category'])
+        $completedEnrollments = Enrollment::with(['course.user', 'course.category'])
             ->where('user_id', $user->id)
             ->whereNotNull('completed_at')
             ->when($request->filled('search'), function ($query) use ($request) {

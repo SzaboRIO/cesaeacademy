@@ -656,6 +656,24 @@ form textarea {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Botão de "Visualizar" no acordeão de videos */
+.btn.btn-sm.btn-outline-primary2 {
+    color: white !important;
+    background-color: #36236a !important;
+    border-color: #36236a !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Botão de "Visualizar" no acordeão de videos on hover */
+.btn.btn-sm.btn-outline-primary2:hover {
+    background-color: white !important;
+    color: #36236a  !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 /* Botão de "Visualizar" no acordeão de videos on hover */
 .btn.btn-sm.btn-outline-primary:hover {
     background-color: white !important;
@@ -825,4 +843,17 @@ z-index: 1;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4; /* Defina o número de linhas desejado */
     text-overflow: clip;
+}
+
+.share-button {
+    color: inherit !important;
+    transition: text-shadow 0.2s ease;
+}
+
+.share-button:hover {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.share-button .bi-share-fill {
+    color: inherit;
 }

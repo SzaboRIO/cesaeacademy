@@ -97,7 +97,7 @@
                                         </thead>
                                         <tbody>
                                             @forelse($completedEnrollments as $enrollment)
-                                                <tr class="clickable-row align-middle" data-href="{{ route('course.show', $enrollment->course->slug) }}">
+                                                <tr class="clickable-row align-middle" data-href="{{ route('courses.showBySlug', $enrollment->course->slug) }}">
                                                     <td>{{ $enrollment->course->title }}</td>
                                                     <td>{{ $enrollment->course->user->firstname }} {{ $enrollment->course->user->lastname }}</td>
                                                     <td>{{ $enrollment->course->category->area }}</td>

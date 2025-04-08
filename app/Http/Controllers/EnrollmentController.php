@@ -12,39 +12,6 @@ use Carbon\Carbon;
 
 class EnrollmentController extends Controller
 {
-    public function index()
-    {
-        $enrollments = Auth::user()->enrollments()->with('course')->get();
-
-        return view('dashboard.aluno.cursos', compact('enrollments'));
-    }
-
-    public function show($id)
-    {
-        $enrollment = Enrollment::where('user_id', Auth::id())
-            ->where('id', $id)
-            ->firstOrFail();
-
-        $course = $enrollment->course;
-        $lesson = $course->lessons()->first();
-
-        return view('dashboard.aluno.curso', compact('enrollment', 'course', 'lesson'));
-    }
-
-    public function watchLesson($enrollmentId, $lessonId)
-    {
-        $enrollment = Enrollment::where('user_id', Auth::id())
-            ->where('id', $enrollmentId)
-            ->firstOrFail();
-
-        $course = $enrollment->course;
-        $lesson = Lesson::where('id', $lessonId)
-            ->where('course_id', $course->id)
-            ->firstOrFail();
-
-        return view('dashboard.aluno.curso', compact('enrollment', 'course', 'lesson'));
-    }
-
     public function markAsCompleted(Request $request)
     {
         $validated = $request->validate([
@@ -121,8 +88,7 @@ class EnrollmentController extends Controller
             ->where('course_id', $course->id)
             ->delete();
 
-        return redirect()->route('aluno.course.show', $enrollment->id)
-            ->with('success', 'Inscrição realizada com sucesso!');
+        return redirect()->back()->with('success', 'Inscrição realizada com sucesso!');
     }
 
     public function reviews()
