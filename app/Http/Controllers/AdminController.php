@@ -68,7 +68,8 @@ class AdminController extends Controller
             'role' => 'required|string|in:admin,formador,aluno',
             'profession' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:8',
-            'avatar' => ['nullable', 'image'],
+            'avatar' => 'nullable', 'image',
+            'biography' => 'nullable', 'string',
         ]);
 
         // Atualizar dados básicos
@@ -77,6 +78,7 @@ class AdminController extends Controller
         $user->email = $validated['email'];
         $user->role = $validated['role'];
         $user->profession = $validated['profession'];
+        $user->biography = $validated['biography'];
 
         if (isset($validated['avatar'])) {
             $avatarPath = $validated['avatar']->store('avatars', 'public');
@@ -110,6 +112,7 @@ class AdminController extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'role' => 'required|string|in:admin,formador,aluno',
+            'biography' => ['nullable', 'string'],
             'profession' => 'nullable|string|max:255',
             'password' => 'required|string|min:8|confirmed',
             'avatar' => ['nullable', 'image'],
@@ -122,6 +125,8 @@ class AdminController extends Controller
         $user->email = $validated['email'];
         $user->role = $validated['role'];
         $user->profession = $validated['profession'] ?? null;
+        $user->biography = $validated['biography'];
+
         $user->password = Hash::make($validated['password']);
 
         // Se houver avatar, salva e atribui

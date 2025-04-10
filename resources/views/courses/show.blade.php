@@ -100,26 +100,30 @@
 
                             <!-- FAVORITAR -->
                             @if(Auth::check())
-                            <form action="{{ route('course.toggle-favorite', $course->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn p-0 border-0 share-button">
-                                    <i class="bi {{ isset($isFavorite) && $isFavorite ? 'bi-heart-fill' : 'bi-heart' }} fs-4" style="color: inherit;"></i>
-                                </button>
-                            </form>
+                                <form action="{{ route('course.toggle-favorite', $course->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn p-0 border-0 share-button">
+                                        <i class="bi {{ isset($isFavorite) && $isFavorite ? 'bi-heart-fill' : 'bi-heart' }} fs-4" style="color: inherit;"></i>
+                                    </button>
+                                </form>
                             @else
-                            <a href="{{ route('login') }}" class="btn p-0 border-0 share-button">
-                                <i class="bi bi-heart fs-4" style="color: inherit;"></i>
-                            </a>
+                                <button type="submit" class="btn p-0 border-0 share-button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister" aria-controls="#offcanvasRegister">
+                                    <i class="bi bi-heart fs-4" style="color: inherit;"></i>
+                                </button>
                             @endif
 
                             <!-- INSCREVER-SE -->
-                            @if (!isset($enrollment))
-                                <form action="{{ route('enroll', $course->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="fs-6 fs-md-2 py-1 subscribe">Inscreva-se</button>
-                                </form>
+                            @if (Auth::check())
+                                @if (!isset($enrollment))
+                                    <form action="{{ route('enroll', $course->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="fs-6 fs-md-2 py-1 subscribe">Inscreva&#8209;se</button>
+                                    </form>
+                                @else
+                                    <span class="badge bg-success fs-6 fs-md-2 py-1 subscribe" style="color: #e2c8e4 !important;">Inscrito</span>
+                                @endif
                             @else
-                                <span class="badge bg-success fs-6 fs-md-2 py-1 subscribe" style="color: #e2c8e4 !important;">Inscrito</span>
+                                <button type="submit" class="fs-6 fs-md-2 py-1 subscribe" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister" aria-controls="#offcanvasRegister">Registe&#8209;se</button>
                             @endif
                         </div>
                     </h2>
@@ -368,13 +372,13 @@
 
                     <div class="container-fluid">
                         <!-- A classe container-fluid cria um contêiner que ocupa 100% da largura da viewport -->
-                        <div class="row">
+                        <div class="row containerforbook">
 
 
                             <!-- Lista de Módulos-->
-                            <div class="content-box box-videos col-md-6">
-                                <div class="container mt-5">
-                                    <div class="accordion" id="modulosAccordion">
+                            <div class="content-box box-videos col-md-6 esquerda">
+                                <div class="container">
+                                    <div class="accordion mb-5 mt-5 pt-3" id="modulosAccordion">
 
                                         @if ($course->modules->count() > 0)
                                             @foreach ($course->modules as $index => $module)
@@ -416,13 +420,20 @@
                                                                             Ver
                                                                         </a>
                                                                     @else
-                                                                    <form action="{{ route('enroll', $course->id) }}" method="POST" style="display: inline;">
-                                                                        @csrf
-                                                                        <button type="submit"
-                                                                                class="btn btn-sm btn-outline-primary2 px-3">
-                                                                            Inscreva&#8209;se
-                                                                        </button>
-                                                                    </form>
+                                                                        @if (Auth::check())
+                                                                            <form action="{{ route('enroll', $course->id) }}" method="POST" style="display: inline;">
+                                                                                @csrf
+                                                                                <button type="submit"
+                                                                                        class="btn btn-sm btn-outline-primary2 px-3">
+                                                                                    Inscreva&#8209;se
+                                                                                </button>
+                                                                            </form>
+                                                                        @else
+                                                                            <button type="submit"
+                                                                                    class="btn btn-sm btn-outline-primary2 px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister" aria-controls="#offcanvasRegister">
+                                                                                Registe&#8209;se
+                                                                            </button>
+                                                                        @endif
                                                                     @endif
                                                                 </div>
                                                             @endforeach
@@ -440,11 +451,11 @@
                             </div>
 
                             <!-- LISTA DE REVIEWS -->
-                            <div class="content-box box-reviews col-md-6 ps-lg-4">
-                                <div class="container mt-4">
+                            <div class="content-box box-reviews col-md-6 ps-lg-4 direita">
+                                <div class="container" >
 
                                     <!-- Lista de Reviews -->
-                                    <div class="reviews-list mb-4">
+                                    <div class="reviews-list mb-5 mt-5">
                                         @forelse($reviews as $review)
                                             <!-- Review {{ $loop->iteration }} -->
                                             <div class="review-item py-3 border-bottom border-light">
@@ -545,7 +556,7 @@
                                             <input type="hidden" name="course_id" value="{{ $course->id }}">
                                         </form>
                                     @else
-                                        <p class="mb-0 mt-3">Só pode enviar uma avaliação se tiver concluído o curso.</p>
+                                        <p class="mb-5 mt-3">Só pode enviar uma avaliação se tiver concluído o curso.</p>
                                     @endif
                                 </div>
                             </div>
@@ -715,6 +726,8 @@
         </div>
     </div>
     <script>
+
+
         // Review e Rating
         document.addEventListener('DOMContentLoaded', function() {
             // Seleciona todas as estrelas dentro do container de rating que possuem o atributo data-value.
@@ -722,6 +735,12 @@
             const ratingValueInput = document.getElementById('ratingValue');
             const ratingText = document.querySelector('.star-rating .rating-text');
             let currentRating = 0; // Valor inicial de rating
+
+            const esquerda = document.querySelector('.esquerda');
+
+            const altura = esquerda.offsetHeight + 'px';
+            document.documentElement.style.setProperty('--altura-coluna', altura);
+            console.log(altura);
 
             // Função para atualizar a aparência das estrelas com base na nota atual
             function updateStars(rating) {

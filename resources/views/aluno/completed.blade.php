@@ -158,16 +158,6 @@
     </div>
 </div>
 
-<style>
-    .clickable-row {
-        cursor: pointer;
-    }
-
-    .clickable-row:hover {
-        background-color: rgba(54, 35, 106, 0.1);
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.clickable-row').forEach(row => {

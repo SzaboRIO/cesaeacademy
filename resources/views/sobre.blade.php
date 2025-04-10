@@ -28,6 +28,11 @@
                 <img src="{{ asset('images/carousel_2.jpg') }}" class="d-block w-100" alt="">
             </div>
 
+            <!-- Image 3 -->
+            <div class="carousel-item">
+                <img src="{{ asset('images/carousel_3.jpg') }}" class="d-block w-100" alt="">
+            </div>
+
         </div>
 
         <!-- Carousel buttons -->

@@ -183,15 +183,10 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="me-3">
-                                                                @if($user->avatar)
-                                                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->firstname }}"
+                                                                <img src="{{ $user->avatar && Storage::disk('public')->exists($user->avatar)
+                                                                        ? asset('storage/' . $user->avatar)
+                                                                        : asset('images/nophoto.jpg') }}" alt="Foto de Perfil"
                                                                         class="rounded-circle" width="40" height="40" style="object-fit: cover;">
-                                                                @else
-                                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
-                                                                        style="width: 40px; height: 40px;">
-                                                                        {{ strtoupper(substr($user->firstname, 0, 1)) }}
-                                                                    </div>
-                                                                @endif
                                                             </div>
                                                             <div>
                                                                 <h6 class="mb-0">{{ $user->firstname }} {{ $user->lastname }}</h6>

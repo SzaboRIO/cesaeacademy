@@ -46,11 +46,11 @@ class ProfileController extends Controller
         $user->lastname = $validated['lastname'];
         $user->email = $validated['email'];
         $user->profession = $validated['profession'];
-        $user->biography = $validated['biography'];
+        $user->biography = $validated['biography'] ?? $user->biography;
 
         // Atualizar avatar, se fornecido
-        if (isset($validated['avatar'])) {
-            $avatarPath = $validated['avatar']->store('avatars', 'public');
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
 
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);

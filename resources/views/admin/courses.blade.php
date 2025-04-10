@@ -176,7 +176,7 @@
                                         </thead>
                                         <tbody>
                                             @forelse($courses as $course)
-                                                <tr class="course-row align-middle" data-course-id="{{ $course->id }}">
+                                                <tr class="clickable-row align-middle" data-href="{{ route('courses.showBySlug', $course->slug) }}">
                                                     <td>{{ $course->id }}</td>
                                                     <td>{{ $course->title }}</td>
                                                     <td class="text-center">{{ $course->formador }}</td>
@@ -207,7 +207,7 @@
                                                             <!-- Botão amarelo (Edição) -->
                                                             <a
                                                                 class="btn btn-sm btn-warning edit-user-btn"
-                                                                href="{{ route('course.edit', $course->id) }}"
+                                                                href="{{ route('course.update.admin', $course->id) }}"
                                                             >
                                                                 <!-- Ícone (caneta) -->
                                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -334,10 +334,20 @@
 </div>
 
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.clickable-row').forEach(row => {
+            row.addEventListener('click', function() {
+                window.location.href = this.dataset.href;
+            });
+        });
+    });
+
     // Script para chamar o modal de exclusão
     document.querySelectorAll('.delete-course-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const courseId = this.dataset.courseId;
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const courseId = this.getAttribute('data-course-id');
             document.getElementById('deleteCourseForm').action = `/curso/${courseId}`;
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteCourseModal'));
             deleteModal.show();
@@ -346,8 +356,9 @@
 
     // Script para chamar o modal de aprovação
     document.querySelectorAll('.approve-course-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const courseId = this.dataset.courseId;
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const courseId = this.getAttribute('data-course-id');
             document.getElementById('approveCourseForm').action = `/curso/${courseId}/approve`;
             const approveModal = new bootstrap.Modal(document.getElementById('approveCourseModal'));
             approveModal.show();

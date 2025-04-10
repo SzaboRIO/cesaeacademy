@@ -27,6 +27,11 @@
                 <img src="{{ asset('images/carousel_2.jpg') }}" class="d-block w-100" alt="">
             </div>
 
+            <!-- Image 3 -->
+            <div class="carousel-item">
+                <img src="{{ asset('images/carousel_3.jpg') }}" class="d-block w-100" alt="">
+            </div>
+
         </div>
 
         <!-- Carousel buttons -->
@@ -106,148 +111,66 @@
     gy-* - Espaçamento vertical entre as colunas
     -->
 
+
     <!-- Cards Carousel 01 -->
-    <div id="carouselExampleCards" class="carousel slide">
+    <div id="carouselExampleCards" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
+            @php
+                // Define quantos cards serão mostrados por slide (4)
+                $cardsPerSlide = 4;
+                // Conta o total de cursos disponíveis (deveria ser 8 conforme o controller)
+                $totalCourses = count($popularCourses);
+            @endphp
 
-            <!-- Slide 1 -->
-            <div class="carousel-item active">
-                <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
-
-                    <!-- Card 1 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
+            {{-- Loop externo: cria um slide para cada grupo de 4 cursos --}}
+            @for ($i = 0; $i < $totalCourses; $i += $cardsPerSlide)
+                <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+                    <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
+                        {{-- Loop interno: percorre os 4 cursos do slide atual --}}
+                        @for ($j = $i; $j < $i + $cardsPerSlide && $j < $totalCourses; $j++)
+                            @php
+                                $course = $popularCourses[$j];
+                            @endphp
+                            <div class="col-md-3">
+                                <!-- Envolver o card com link para torná-lo clicável -->
+                                <a href="{{ route('courses.showBySlug', $course->slug) }}" style="text-decoration: none; color: inherit;">
+                                    <div class="card h-100">
+                                        <!-- Imagem do curso dinâmica -->
+                                        <img src="{{ asset('storage/' . $course->image) }}"
+                                            class="card-img-top w-100 img-fluid"
+                                            alt="{{ $course->title }}"
+                                            style="object-fit: cover; height: 180px;">
+                                        <div class="card-body">
+                                            <!-- Título do curso -->
+                                            <h5 class="card-title">{{ $course->title }}</h5>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <!-- Exibe informações dinâmicas -->
+                                            <li class="list-group-item">Área: {{ $course->category->area ?? 'N/D' }}</li>
+                                            <li class="list-group-item">Nível: {{ $course->level }}</li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                        @endfor
                     </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
                 </div>
-            </div>
-
-            <!-- Slide 2 -->
-            <div class="carousel-item">
-                <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
-
-                    <!-- Card 5 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    <!-- Card 6 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    <!-- Card 7 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                    <!-- Card 8 -->
-                    <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        </ul>
-                    </div>
-                    </div>
-
-                </div>
-            </div>
+            @endfor
         </div>
 
-        <!-- Carousel buttons -->
+        <!-- Botões de Controle do Carrossel -->
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCards" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span class="visually-hidden">Anterior</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCards" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span class="visually-hidden">Próximo</span>
         </button>
-
     </div>
+
+
+
 
 
     <!-- ADICIONADOS RECENTEMENTE - CARDS CAROULSEL 02 -->
@@ -302,148 +225,62 @@
     gy-* - Espaçamento vertical entre as colunas
     -->
 
-    <!-- Cards Carousel 02 -->
-    <div id="carouselExampleCards2" class="carousel slide">
+    <!-- Cards Carousel para Recent Courses -->
+    <div id="carouselRecentCourses" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
+            @php
+                // Definir quantos cards por slide (4, conforme desejado)
+                $cardsPerSlide = 4;
+                // Contar o total de cursos recentes (deveria ser 8 conforme o controller)
+                $totalCourses = count($recentCourses);
+            @endphp
 
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-            <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
-
-                <!-- Card 1 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
+            {{-- Loop para criar cada slide --}}
+            @for ($i = 0; $i < $totalCourses; $i += $cardsPerSlide)
+                <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+                    <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
+                        {{-- Loop interno para cada card dentro do slide --}}
+                        @for ($j = $i; $j < $i + $cardsPerSlide && $j < $totalCourses; $j++)
+                            @php
+                                $course = $recentCourses[$j];
+                            @endphp
+                            <div class="col-md-3">
+                                <!-- Envolver o card com link para torná-lo clicável -->
+                                <a href="{{ route('courses.showBySlug', $course->slug) }}" style="text-decoration: none; color: inherit;">
+                                    <div class="card h-100">
+                                        <!-- Imagem do curso dinâmica -->
+                                        <img src="{{ asset('storage/' . $course->image) }}"
+                                            class="card-img-top w-100 img-fluid"
+                                            alt="{{ $course->title }}"
+                                            style="object-fit: cover; height: 180px;">
+                                        <div class="card-body">
+                                            <!-- Título do curso -->
+                                            <h5 class="card-title">{{ $course->title }}</h5>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Área: {{ $course->category->area ?? 'N/D' }}</li>
+                                            <li class="list-group-item">Nível: {{ $course->level }}</li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                        @endfor
                     </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
                 </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-            </div>
+            @endfor
         </div>
 
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-            <div class="row row-cols-1 gx-3 gy-5 mb-5 mb-md-5">
-
-                <!-- Card 5 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="col-md-3">
-                <div class="card">
-                    <img src="{{ asset('images/card_back_end.jpg') }}" class="card-img-top" alt="Image description">
-                    <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    </ul>
-                </div>
-                </div>
-
-            </div>
-        </div>
+        <!-- Botões de Controle do Carrossel -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselRecentCourses" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselRecentCourses" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Próximo</span>
+        </button>
     </div>
 
-    <!-- Carousel buttons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCards2" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCards2" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-
-    </div>
 
 
 
@@ -519,18 +356,26 @@
             -->
 
             <div class="col-md-6 d-flex flex-column justify-content-center text-center px-md-5 px-sm-0">
-                <h2 class="fs-2 fs-md-2 fs-lg-1 mb-4 mb-md-3 mt-5"><b>Receba novidades da CESAE Digital:</b></h2>
-                <p class="fs-6 fs-md-5">Subscreva-se à nossa newsletter para receber informações semanais sobre novos cursos, eventos e conteúdos exclusivos.</p>
+                <h2 class="fs-2 fs-md-2 fs-lg-1 mb-4 mb-md-3 mt-5">
+                    <b>Receba novidades da CESAE Digital:</b>
+                </h2>
+                <p class="fs-6 fs-md-5">
+                    Subscreva-se à nossa newsletter para receber informações semanais sobre novos cursos, eventos e conteúdos exclusivos.
+                </p>
 
-                <form>
+                <form action="{{ route('newsletter.subscribe') }}" method="POST">
+                    @csrf
                     <div class="mb-4 mt-4">
-                      <label for="exampleInputEmail1" class="form-label">Endereço de Email:</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      <div id="emailHelp" class="form-text"><small>Nunca iremos compartilhar seus dados com ninguém.</small></div>
+                        <label for="exampleInputEmail1" class="form-label">Endereço de Email:</label>
+                        <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                        <div id="emailHelp" class="form-text">
+                            <small>Nunca iremos compartilhar seus dados com ninguém.</small>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary mt-md-4 mt-4 btn-send">Enviar</button>
-                  </form>
+                </form>
             </div>
+
 
         </div>
     </div>

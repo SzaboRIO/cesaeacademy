@@ -119,6 +119,17 @@
                             </div>
 
                             <div class="mb-3">
+                                <label for="biography" class="form-label">Biografia</label>
+                                <textarea
+                                    class="form-control"
+                                    id="biography"
+                                    name="biography"
+                                    rows="4"
+                                    >{{ old('biography', $user->biography) }}
+                                </textarea>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input
                                     type="email"
@@ -141,7 +152,9 @@
 
                             <div class="mb-3">
                                 <img style="width: 50px; height:50px"
-                                     src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/nophoto.jpg') }}"
+                                src="{{ $user->avatar && Storage::disk('public')->exists($user->avatar)
+                                ? asset('storage/' . $user->avatar)
+                                : asset('images/nophoto.jpg') }}"
                                      alt="Foto de Perfil">
 
                                 <label for="avatar" class="form-label">

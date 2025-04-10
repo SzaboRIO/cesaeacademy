@@ -10,6 +10,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FormadorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\CourseProposalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,8 @@ Route::get('/curso/{slug}', [CourseController::class, 'showBySlug'])->name('cour
 Route::get('/area/{area}', [CourseController::class, 'showByArea'])->name('courses.area');
 Route::get('/sobre', [HomeController::class, 'about'])->name('about');
 Route::get('/colaborar', [HomeController::class, 'collaborate'])->name('collaborate');
+Route::post('/colaborar/proposta', [CourseProposalController::class, 'store'])->name('collaborate.proposal');
+Route::post('/newsletter/subscricao', [NewsletterController::class, 'newsletter'])->name('newsletter.subscribe');
 
 // Perfil (rotas privadas)
 Route::middleware(['auth'])->group(function () {
@@ -48,8 +52,8 @@ Route::middleware(['auth', CheckRole::class.':aluno'])->group(function () {
 Route::middleware(['auth', CheckRole::class.':formador'])->group(function () {
     Route::get('/novo-curso-formador', [CourseController::class, 'formadorCreate'])->name('courses.create.formador');
     Route::post('/novo-curso-formador', [CourseController::class, 'store'])->name('courses.store.formador');
-    Route::get('/editar-curso/{id}', [CourseController::class, 'edit'])->name('course.edit');
-    Route::put('/editar-curso/{id}', [CourseController::class, 'update'])->name('course.update');
+    Route::get('/editar-curso/{id}/formador', [CourseController::class, 'formadorEdit'])->name('course.edit.formador');
+    Route::put('/editar-curso/{id}/formador', [CourseController::class, 'update'])->name('course.update.formador');
     Route::get('/formador/cursos', [CourseController::class, 'formadorIndex'])->name('formador.courses');
 });
 
@@ -67,17 +71,25 @@ Route::middleware(['auth', CheckRole::class.':admin'])->group(function () {
     Route::get('/novo-curso-admin', [CourseController::class, 'adminCreate'])->name('courses.create.admin');
     Route::post('/novo-curso-admin', [CourseController::class, 'store'])->name('courses.store.admin');
     Route::get('/admin/cursos', [CourseController::class, 'adminIndex'])->name('admin.courses');
-    Route::get('/editar-curso/{id}', [CourseController::class, 'edit'])->name('course.edit');
-    Route::put('/editar-curso/{id}', [CourseController::class, 'update'])->name('course.update');
-    Route::get('/curso/{id}/approve', [CourseController::class, 'approveCourse'])->name('courses.approve');
-    Route::delete('/curso/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
+    Route::get('/editar-curso/{id}/admin', [CourseController::class, 'adminEdit'])->name('course.edit.admin');
+    Route::put('/editar-curso/{id}/admin', [CourseController::class, 'update'])->name('course.update.admin');
+    Route::get('/curso/{id}/approve', [CourseController::class, 'approveCourse'])->name('course.approve');
+    Route::delete('/curso/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
 
-    Route::get('/curso/{id}', [AdminController::class, 'showCourse'])->name('admin.course.show');
-    Route::get('/rejeitar-curso/{id}', [AdminController::class, 'rejectCourse'])->name('admin.course.reject');
-    Route::delete('/excluir-curso/{id}', [AdminController::class, 'deleteCourse'])->name('admin.course.delete');
+    //Route::get('/curso/{id}', [AdminController::class, 'showCourse'])->name('admin.course.show');
+    //Route::get('/rejeitar-curso/{id}', [AdminController::class, 'rejectCourse'])->name('admin.course.reject');
+    //Route::delete('/excluir-curso/{id}', [AdminController::class, 'deleteCourse'])->name('admin.course.delete');
 
     // Previsualização
-    Route::get('/preview/aluno', [AdminController::class, 'previewAluno'])->name('admin.preview.aluno');
-    Route::get('/preview/formador', [AdminController::class, 'previewFormador'])->name('admin.preview.formador');
+    //Route::get('/preview/aluno', [AdminController::class, 'previewAluno'])->name('admin.preview.aluno');
+    //Route::get('/preview/formador', [AdminController::class, 'previewFormador'])->name('admin.preview.formador');
 
  });
+
+ Route::fallback(function (Illuminate\Http\Request $request) {
+    return response()->view('fallback', [
+        'errorCode' => 404,
+        'errorMessage' => 'A página que procura não foi encontrada.',
+        'previousUrl' => url()->previous() !== url()->current() ? url()->previous() : route('home')
+    ], 404);
+});

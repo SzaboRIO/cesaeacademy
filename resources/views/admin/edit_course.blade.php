@@ -32,7 +32,7 @@
                             - Os campos preenchidos com os valores atuais do curso.
                             - O mesmo estilo e comentários da create.blade.php, para manter consistência.
                         -->
-                        <form action="{{ route('course.update', $course->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('course.update.admin', $course->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 

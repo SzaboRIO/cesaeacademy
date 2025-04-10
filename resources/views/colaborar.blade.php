@@ -28,6 +28,11 @@
             <img src="{{ asset('images/carousel_2.jpg') }}" class="d-block w-100" alt="">
         </div>
 
+        <!-- Image 3 -->
+        <div class="carousel-item">
+            <img src="{{ asset('images/carousel_3.jpg') }}" class="d-block w-100" alt="">
+        </div>
+
     </div>
 
     <!-- Carousel buttons -->
@@ -110,7 +115,7 @@
 
 
 
-   <!-- SUBSCRIÇÃO NA NEWSLETTER -->
+   <!-- PEDIDO DE PROPOSTA DE FORMAÇÃO -->
 
    <section class="content-box mt-5 px-5 py-5">
        <div class="container-fluid"> <!-- A classe container-fluid cria um contêiner que ocupa 100% da largura da viewport -->
@@ -143,41 +148,42 @@
 
                <div class="col-md-4 d-flex flex-column justify-content-center text-center px-md-5 px-sm-0">
 
-                   <form>
-                       <!-- Selecionar opção: "Como descobriu a CESAE?"-->
-                       <select class="form-select" id="selecao" aria-label="Default select example">
-                           <option selected>Como descobriu a CESAE Digital?</option>
-                           <option value="5">Pesquisa no Google</option>
-                           <option value="6">Recomendação de amigo</option>
-                           <option value="7">Evento ou Feira</option>
-                           <option value="8">E-mail Marketing</option>
-                           <option value="9">Anúncio Online</option>
-                           <option value="10">Notícia ou Blog</option>
-                           <option value="11">Podcast</option>
-                           <option value="14">Publicidade Impressa</option>
-                           <option value="1">LinkedIn</option>
-                           <option value="2">Instagram</option>
-                           <option value="3">Facebook</option>
-                           <option value="4">YouTube</option>
-                           <option value="15">Outro</option>
-                       </select>
+                <form action="{{ route('collaborate.proposal') }}" method="POST">
+                    @csrf
+                    <!-- Selecionar opção: "Como descobriu a CESAE?"-->
+                    <select class="form-select" id="selecao" name="como_descobriu" aria-label="Default select example" required>
+                        <option value="" selected>Como descobriu a CESAE Digital?</option>
+                        <option value="Pesquisa no Google">Pesquisa no Google</option>
+                        <option value="Recomendação de amigo">Recomendação de amigo</option>
+                        <option value="Evento ou Feira">Evento ou Feira</option>
+                        <option value="E-mail Marketing">E-mail Marketing</option>
+                        <option value="Anúncio Online">Anúncio Online</option>
+                        <option value="Notícia ou Blog">Notícia ou Blog</option>
+                        <option value="Podcast">Podcast</option>
+                        <option value="Publicidade Impressa">Publicidade Impressa</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="YouTube">YouTube</option>
+                        <option value="Outro">Outro</option>
+                    </select>
 
-                       <!-- Inserir email -->
-                       <div class="mb-4 mt-4">
-                           <label for="exampleInputEmail1" class="form-label">Endereço de Email:</label>
-                           <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                           <div id="emailHelp" class="form-text"><small>Nunca iremos compartilhar seus dados com ninguém.</small>
-                           </div>
-                         </div>
+                    <!-- Inserir email -->
+                    <div class="mb-4 mt-4">
+                        <label for="email" class="form-label">Endereço de Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+                        <div id="emailHelp" class="form-text"><small>Nunca iremos compartilhar seus dados com ninguém.</small>
+                        </div>
+                    </div>
 
-                        <!-- Inserir proposta de formação -->
-                       <div class="mb-4 mt-4">
-                           <label for="propostaFormacao" class="form-label proposta">Breve descrição da sua proposta de formação:</label>
-                           <textarea class="form-control" id="propostaFormacao" rows="3"></textarea>
-                       </div>
+                    <!-- Inserir proposta de formação -->
+                    <div class="mb-4 mt-4">
+                        <label for="descricao" class="form-label proposta">Breve descrição da sua proposta de formação:</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
 
-                       <button type="submit" class="btn btn-primary mt-md-4 mt-4 btn-send">Enviar</button>
-                   </form>
+                    <button type="submit" class="btn btn-primary mt-md-4 mt-4 btn-send">Enviar</button>
+                </form>
 
                </div>
 

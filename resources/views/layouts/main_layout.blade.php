@@ -63,8 +63,8 @@
             </button>
 
             <!-- Search bar -->
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control-search mr-sm-2 search-type" type="search" placeholder="O que deseja aprender?" aria-label="Buscar">
+            <form action="{{ route('courses.index') }}" method="GET" class="form-inline my-2 my-lg-0">
+                <input name="search" class="form-control-search mr-sm-2 search-type" type="search" placeholder="O que deseja aprender?" aria-label="Buscar" value="{{ request('search') }}">
                 <button class="btn btn-outline-success my-2 my-sm-0 btn-search" type="submit">Procurar</button>
             </form>
 
@@ -90,10 +90,10 @@
                         <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('courses.index') }}">&nbsp;&nbsp;&nbsp;Todos&nbsp;&nbsp;&nbsp;</a></li>
                         <hr>
-                        <li><a class="dropdown-item" href="delopment.html">&nbsp;&nbsp;&nbsp;Development&nbsp;&nbsp;&nbsp;</a></li>
-                        <li><a class="dropdown-item" href="itnetwork.html">&nbsp;&nbsp;&nbsp;IT Network&nbsp;&nbsp;&nbsp;</a></li>
-                        <li><a class="dropdown-item" href="mediadesign.html">&nbsp;&nbsp;&nbsp;Media Design&nbsp;&nbsp;&nbsp;</a></li>
-                        <li><a class="dropdown-item" href="people.html">&nbsp;&nbsp;&nbsp;People&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a class="dropdown-item" href="{{ route('courses.area', ['area' => 'Development']) }}">&nbsp;&nbsp;&nbsp;Development&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a class="dropdown-item" href="{{ route('courses.area', ['area' => 'IT Network']) }}">&nbsp;&nbsp;&nbsp;IT Network&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a class="dropdown-item" href="{{ route('courses.area', ['area' => 'Media Design']) }}">&nbsp;&nbsp;&nbsp;Media Design&nbsp;&nbsp;&nbsp;</a></li>
+                        <li><a class="dropdown-item" href="{{ route('courses.area', ['area' => 'People']) }}">&nbsp;&nbsp;&nbsp;People&nbsp;&nbsp;&nbsp;</a></li>
                         </ul>
                     </li>
 

@@ -20,6 +20,7 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
+
         $query = Course::where('status', 'aprovado');
 
         // Filtros
@@ -29,12 +30,14 @@ class CourseController extends Controller
             });
         }
 
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
+        // Category
+        if ($request->has('category') && $request->input('category_all') != '1') {
+            $query->whereIn('category_id', $request->category);
         }
 
-        if ($request->has('level')) {
-            $query->where('level', $request->level);
+        // Level
+        if ($request->has('level') && $request->input('level_all') != '1') {
+            $query->whereIn('level', $request->level);
         }
 
         if ($request->has('search')) {
@@ -47,8 +50,7 @@ class CourseController extends Controller
 
         $courses = $query->paginate(10);
         $categories = Category::all();
-
-        return view('cursos', compact('courses', 'categories'));
+        return view('catalog', compact('courses', 'categories'));
     }
 
     public function category()
@@ -80,7 +82,7 @@ class CourseController extends Controller
         // Carregar os reviews para o curso (ordenados dos mais recentes para os mais antigos)
         $reviews = Review::where('course_id', $course->id)
             ->latest()  // ou ->orderBy('created_at', 'desc')
-            ->paginate(3);
+            ->paginate(2);
 
         // Calcular número de cursos que o formador criou e estão aprovados
         $approvedCoursesCount = Course::where('user_id', $course->user->id)
@@ -95,8 +97,15 @@ class CourseController extends Controller
             ->get()
             ->sum('enrollments_count');
 
+        $isFavorite = false;
+
         // Verificar se o usuário está autenticado
         if (Auth::check()) {
+
+            // Verificar se o curso está nos favoritos do usuário
+            $isFavorite = Favorite::where('user_id', Auth::id())
+                ->where('course_id', $course->id)
+                ->exists();
             // Verificar se o usuário está matriculado neste curso
             $enrollment = Enrollment::where('user_id', Auth::id())
                 ->where('course_id', $course->id)
@@ -120,12 +129,12 @@ class CourseController extends Controller
                     ? round(count($completedLessons) / $totalLessons * 100)
                     : 0;
 
-                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses'));
+                return view('courses.show', compact('course', 'enrollment', 'completedLessons', 'progressPercentage', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses', 'isFavorite'));
             }
         }
 
         // Se o usuário não estiver matriculado, apenas mostra o curso
-        return view('courses.show', compact('course', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses'));
+        return view('courses.show', compact('course', 'averageRating', 'reviews', 'approvedCoursesCount', 'totalEnrolled', 'suggestedCourses', 'isFavorite'));
     }
 
     public function showById($id)
@@ -169,11 +178,22 @@ class CourseController extends Controller
 
     public function showByArea($area)
     {
+        $categories = Category::where('area', $area)->get();
+
+        if ($categories->isEmpty()) {
+            return response()->view('fallback', [
+                'errorCode' => 404,
+                'errorMessage' => 'A área de curso que procura não foi encontrada.',
+                'previousUrl' => url()->previous() !== url()->current() ? url()->previous() : route('home')
+            ], 404);
+        }
+
+        // Continue with normal logic if categories exist
         $courses = Course::whereHas('category', function($query) use ($area) {
             $query->where('area', $area);
         })->where('status', 'aprovado')->paginate(12);
 
-        return view('cursos', compact('courses', 'area'));
+        return view('catalog', compact('courses', 'area', 'categories'));
     }
 
     public function createModule($courseId)
@@ -331,7 +351,7 @@ class CourseController extends Controller
         }
     }
 
-    public function edit($id)
+    public function adminEdit($id)
     {
         // Buscar o curso junto com os módulos e as aulas
         $course = Course::with('modules.lessons')->findOrFail($id);
@@ -345,7 +365,24 @@ class CourseController extends Controller
         $categories = Category::all();
 
         // Retornar a view de edição
-        return view('courses.edit', compact('course', 'categories'));
+        return view('admin.edit_course', compact('course', 'categories'));
+    }
+
+    public function formadorEdit($id)
+    {
+        // Buscar o curso junto com os módulos e as aulas
+        $course = Course::with('modules.lessons')->findOrFail($id);
+
+        // Opcional: Verificar permissão (ex.: só admin ou o formador pode editar)
+        if (Auth::id() !== $course->user_id && !Auth::user()->isAdmin()) {
+            return redirect()->back()->with('error', 'Você não tem permissão para editar este curso.');
+        }
+
+        // Carregar categorias para exibir no <select>
+        $categories = Category::all();
+
+        // Retornar a view de edição
+        return view('formador.edit_course', compact('course', 'categories'));
     }
 
     public function update(Request $request, $id)
