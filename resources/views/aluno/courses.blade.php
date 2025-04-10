@@ -107,48 +107,8 @@
                                     <table class="table table-hover mb-0">
                                         <thead class="table-light text-center align-middle">
                                             <tr>
-                                                <th scope="col">
-                                                    <!-- Link para ordenar por "title" -->
-                                                    <a href="{{ route('aluno.courses', [
-                                                        'search' => request('search'),
-                                                        'status' => request('category'),
-                                                        'sort' => 'title',
-                                                        'direction' => (request('sort') === 'title' && request('direction') === 'asc') ? 'desc' : 'asc',
-                                                    ]) }}" class="text-dark">
-                                                        Título
-                                                        @if (request('sort') === 'title')
-                                                            @if (request('direction') === 'asc')
-                                                                <i class="fas fa-sort-up"></i>
-                                                            @else
-                                                                <i class="fas fa-sort-down"></i>
-                                                            @endif
-                                                        @else
-                                                            <i class="fas fa-sort"></i>
-                                                        @endif
-                                                    </a>
-                                                </th>
-
-                                                <th scope="col" style="width: 60px; text-align: left">
-                                                    <!-- Link para ordenar por "formador" -->
-                                                    <a href="{{ route('admin.courses', [
-                                                        'search' => request('search'),
-                                                        'status' => request('category'),
-                                                        'sort' => 'formador',
-                                                        'direction' => (request('sort') === 'formador' && request('direction') === 'asc') ? 'desc' : 'asc',
-                                                    ]) }}" class="text-dark">
-                                                        Formador
-                                                        @if (request('sort') === 'formador')
-                                                            @if (request('direction') === 'asc')
-                                                                <i class="fas fa-sort-up"></i>
-                                                            @else
-                                                                <i class="fas fa-sort-down"></i>
-                                                            @endif
-                                                        @else
-                                                            <i class="fas fa-sort"></i>
-                                                        @endif
-                                                    </a>
-                                                </th>
-
+                                                <th scope="col">Título</th>
+                                                <th scope="col">Formador</th>
                                                 <th scope="col">Área</th>
                                                 <th scope="col">Nível</th>
                                                 <th scope="col">Data de inscrição</th>

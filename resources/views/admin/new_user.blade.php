@@ -143,6 +143,7 @@
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
                                 <select class="form-select form-select-purple" id="role" name="role">
+                                    <option value="" {{ old('role') == '' ? 'selected' : '' }}>Selecione uma opção</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
                                     <option value="formador" {{ old('role') == 'formador' ? 'selected' : '' }}>Formador</option>
                                     <option value="aluno" {{ old('role') == 'aluno' ? 'selected' : '' }}>Aluno</option>

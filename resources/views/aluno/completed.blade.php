@@ -86,7 +86,7 @@
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover mb-0">
-                                        <thead class="table-light text-center">
+                                        <thead class="table-light text-center align-middle">
                                             <tr>
                                                 <th scope="col">Título</th>
                                                 <th scope="col">Formador</th>
@@ -99,8 +99,8 @@
                                             @forelse($completedEnrollments as $enrollment)
                                                 <tr class="clickable-row align-middle" data-href="{{ route('courses.showBySlug', $enrollment->course->slug) }}">
                                                     <td>{{ $enrollment->course->title }}</td>
-                                                    <td>{{ $enrollment->course->user->firstname }} {{ $enrollment->course->user->lastname }}</td>
-                                                    <td>{{ $enrollment->course->category->area }}</td>
+                                                    <td class="text-center">{{ $enrollment->course->user->firstname }} {{ $enrollment->course->user->lastname }}</td>
+                                                    <td class="text-center">{{ $enrollment->course->category->area }}</td>
                                                     <td class="text-center">
                                                         @if($enrollment->course->level == 'Iniciante')
                                                             <span class="badge bg-success">Iniciante</span>

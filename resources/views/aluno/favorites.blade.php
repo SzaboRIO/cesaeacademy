@@ -94,7 +94,7 @@
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover mb-0">
-                                        <thead class="table-light text-center">
+                                        <thead class="table-light text-center align-middle">
                                             <tr>
                                                 <th scope="col">Título</th>
                                                 <th scope="col">Formador</th>
@@ -107,8 +107,8 @@
                                             @forelse($favorites as $favorite)
                                                 <tr class="clickable-row align-middle" data-href="{{ route('courses.showBySlug', $favorite->course->slug) }}">
                                                     <td>{{ $favorite->course->title }}</td>
-                                                    <td>{{ $favorite->course->user->firstname }} {{ $favorite->course->user->lastname }}</td>
-                                                    <td>{{ $favorite->course->category->area }}</td>
+                                                    <td class="text-center">{{ $favorite->course->user->firstname }} {{ $favorite->course->user->lastname }}</td>
+                                                    <td class="text-center">{{ $favorite->course->category->area }}</td>
                                                     <td class="text-center">
                                                         @if($favorite->course->level == 'Iniciante')
                                                             <span class="badge bg-success">Iniciante</span>

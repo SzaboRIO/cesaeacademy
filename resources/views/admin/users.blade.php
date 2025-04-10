@@ -106,7 +106,7 @@
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover mb-0">
-                                        <thead class="table-light text-center">
+                                        <thead class="table-light text-center align-middle">
                                             <tr>
                                                 <th scope="col" style="width: 60px; text-align: left">
                                                     <!-- Link para ordenar por "id" -->
